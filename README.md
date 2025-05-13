@@ -1,70 +1,49 @@
-# Getting Started with Create React App
+# 🚗 Rental Mobil Iqra
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Selamat datang di **Rental Mobil Iqra** – Solusi cerdas dan terpercaya untuk kebutuhan transportasi Anda!  
+Website ini dirancang untuk memberikan kemudahan dalam melakukan reservasi mobil secara online, cepat, dan efisien.
 
-## Available Scripts
+---
 
-In the project directory, you can run:
+## 🌟 Tentang Proyek Ini
 
-### `npm start`
+Rental Mobil Iqra adalah platform pemesanan mobil berbasis web yang dibangun dengan semangat pelayanan dan teknologi.  
+Kami percaya bahwa perjalanan yang nyaman dimulai dari proses sewa yang mudah.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+> "Karena setiap perjalanan punya cerita, dan kami ingin menjadi bagian dari cerita terbaik Anda."
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+---
 
-### `npm test`
+## 💻 Teknologi yang Digunakan
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- **React.js** – untuk membangun antarmuka pengguna yang responsif
+- **JavaScript** – sebagai bahasa pemrograman utama
+- **React Bootstrap**  – untuk desain tampilan
 
-### `npm run build`
+---
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## ✨ Fitur Utama
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+- Melihat daftar mobil yang tersedia
+- Detail setiap mobil lengkap dengan harga dan spesifikasi
+- Formulir pemesanan cepat
+- Tampilan responsif untuk desktop dan mobile
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+---
 
-### `npm run eject`
+## 📌 Catatan Pengembangan
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+Proyek ini masih terus dikembangkan secara bertahap.  
+Saran dan kontribusi sangat kami hargai demi menjadikan Rental Mobil Iqra lebih baik lagi.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+---
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+## 🛠️ Cara Menjalankan Proyek
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+```bash
+git clone https://github.com/username/rentaliqra.git
+cd rentaliqra
+npm install
+npm start
 
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+"Seperti mobil yang siap melaju di jalan, hidup juga menunggu kamu untuk menyalakan mesin dan bergerak maju. Gas terus!"
