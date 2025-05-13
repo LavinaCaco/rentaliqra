@@ -60,7 +60,7 @@ const navigate = useNavigate();
                <Card className="h-100">
                   <Card.Img 
                     variant="top" 
-                    src="/assets/mobil4.png" 
+                    src="/assets/mobil3.jpg" 
                     style={{ height: '300px', objectFit: 'cover' }}
                   />
                 <Card.Body>
@@ -79,7 +79,7 @@ const navigate = useNavigate();
                <Card className="h-100">
                   <Card.Img 
                     variant="top" 
-                    src="/assets/mobil4.png" 
+                    src="/assets/mobil3.jpg" 
                     style={{ height: '300px', objectFit: 'cover' }}
                   />
                 <Card.Body>
@@ -101,7 +101,7 @@ const navigate = useNavigate();
                <Card className="h-100">
                   <Card.Img 
                     variant="top" 
-                    src="/assets/mobil4.png" 
+                    src="/assets/mobil3.jpg" 
                     style={{ height: '300px', objectFit: 'cover' }}
                   />
                 <Card.Body>
