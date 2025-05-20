@@ -58,7 +58,7 @@ export default function SearchSection() {
             </Col>
 
             <Col xs="auto">
-              <Button variant="dark" className="px-4">Cari</Button>
+              <Button href= '/mobil' variant="dark" className="px-4">Cari</Button>
             </Col>
           </Row>
 
