@@ -2,7 +2,7 @@ import React from "react";
 import { Container, Row, Col } from "react-bootstrap";
 
 export default function HeroSection() {
-  const videoUrl = "https://www.w3schools.com/howto/rain.mp4"; // Ganti sesuai kebutuhan
+  const videoUrl = "/assets/bghome.mp4";
 
   return (
     <div

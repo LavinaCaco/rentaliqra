@@ -11,12 +11,12 @@ export default function FAQAndTermsSection() {
             <h3 className="fw-bold mb-4">Syarat & Ketentuan Sewa Mobil</h3>
             <p className="text-muted">
               Syarat dan ketentuan dapat bervariasi antara penyedia sewa mobil
-              yang ada di Bali. Pastikan untuk membaca dan memahami dengan baik
+              yang ada di Palu. Pastikan untuk membaca dan memahami dengan baik
               perjanjian penyewaan sebelum Anda memutuskan untuk menyewa mobil
               di kami. Dengan menyewa mobil di kami, itu berarti kami anggap
               Anda telah membaca, memahami dengan baik, menyetujui serta
               bersedia mematuhi syarat dan ketentuan yang berlaku di Top Sewa
-              Mobil Bali, seperti dibawah ini:
+              Mobil Palu, seperti dibawah ini:
             </p>
 
             <h6 className="fw-bold mt-4">
@@ -35,7 +35,7 @@ export default function FAQAndTermsSection() {
                 mobil, maksimal extra time adalah 3 jam.
               </li>
               <li>
-                Gratis biaya antar dan pengembalian mobil jika sewa 4 hari atau
+                Gratis biaya antar dan pengemPaluan mobil jika sewa 4 hari atau
                 lebih, di airport, Denpasar, Sanur, Kuta, Legian, Kerobokan,
                 Seminyak dan sekitarnya. Jika di luar area tersebut, ada biaya
                 tambahan menyesuaikan jarak.
@@ -47,7 +47,7 @@ export default function FAQAndTermsSection() {
                 kaca pecah akan dikenakan biaya perbaikan dan kompensasi (maks.
                 10 hari sewa).
               </li>
-              <li>Sewa mobil hanya boleh digunakan di wilayah Bali saja.</li>
+              <li>Sewa mobil hanya boleh digunakan di wilayah Palu saja.</li>
               <li>
                 Tidak diperkenankan menggunakan mobil sewaan untuk balapan,
                 segala bentuk kejahatan, atau aktivitas berisiko tinggi.
@@ -83,8 +83,8 @@ export default function FAQAndTermsSection() {
                   a: "Bisa, sesuai lokasi yang disepakati.",
                 },
                 {
-                  q: "Apakah mobil bisa dibawa ke luar Bali?",
-                  a: "Tidak, hanya untuk wilayah Bali.",
+                  q: "Apakah mobil bisa dibawa ke luar Palu?",
+                  a: "Tidak, hanya untuk wilayah Palu.",
                 },
                 {
                   q: "Sewa mobil lepas kunci minimal berapa hari?",

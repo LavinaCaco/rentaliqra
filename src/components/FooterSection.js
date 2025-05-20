@@ -91,17 +91,17 @@ export default function FooterSection() {
           <Col md={4}>
             <h5 className="fw-bold mb-3">Ikuti Kami</h5>
             <div className="d-flex mb-3">
-              <a href="#" className="text-white me-3 fs-5">
+              <a href="https://www.facebook.com/" className="text-white me-3 fs-5">
                 <FaFacebookF />
               </a>
-              <a href="#" className="text-white me-3 fs-5">
+              <a href="https://www.instagram.com/" className="text-white me-3 fs-5">
                 <FaInstagram />
               </a>
-              <a href="#" className="text-white me-3 fs-5">
+              <a href="https://x.com/" className="text-white me-3 fs-5">
                 <FaTwitter />
               </a>
             </div>
-            <p className="text-white-50 small">
+            <p className="text-white small">
               Temukan berbagai informasi menarik dan promo eksklusif di media
               sosial kami.
             </p>
@@ -112,7 +112,7 @@ export default function FooterSection() {
         <Row>
           <Col className="text-center">
             <hr style={{ borderTop: "1px solid rgba(255, 255, 255, 0.3)" }} />
-            <p className="mb-0 small text-white-50">
+            <p className="mb-0 small text-white">
               &copy; {new Date().getFullYear()} Rental IQRA. All Rights
               Reserved.
             </p>

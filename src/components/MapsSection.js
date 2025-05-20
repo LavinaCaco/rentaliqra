@@ -19,7 +19,7 @@ export default function MapsSection() {
               }}
             >
               <iframe
-                src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d5754.614347125093!2d110.41302848556319!3d-7.7593866161297536!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e7a599bd3bdc4ef%3A0x6f1714b0c4544586!2sUniversitas%20Amikom%20Yogyakarta!5e0!3m2!1sid!2sid!4v1746582534275!5m2!1sid!2sid"
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3989.348041763184!2d119.8357922!3d-0.8797168999999999!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2d8bede0926a95d5%3A0x3ec2601eb7c62f6d!2sRENTAL%20IQRA%20PALU!5e0!3m2!1sid!2sid!4v1747712881420!5m2!1sid!2sid"
                 width="100%"
                 height="400"
                 style={{ border: 0 }}
@@ -34,11 +34,11 @@ export default function MapsSection() {
           {/* Keterangan */}
           <Col lg={6}>
             <h2 className="mb-3 fw-bold" style={{ color: "#222" }}>
-              Lokasi Kami di Yogyakarta
+              Lokasi Kami di Palu
             </h2>
             <p style={{ fontSize: "1.1rem", color: "#555" }}>
               Kunjungi kami langsung untuk melihat armada dan layanan kami
-              secara langsung. Kami berada di pusat kota Yogyakarta, mudah
+              secara langsung. Kami berada di pusat kota Palu, mudah
               diakses dan strategis.
             </p>
             <p style={{ fontSize: "1.1rem", color: "#555" }}>

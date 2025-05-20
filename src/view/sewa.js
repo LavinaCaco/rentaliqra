@@ -3,6 +3,7 @@ import { Container, Row, Col, Navbar, Nav, Button, Image, Card, InputGroup, Form
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {FaCar, FaMoneyBillWave, FaMapMarkerAlt, FaPhone, FaEnvelope, FaFacebookF, FaInstagram, FaTwitter } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
+import NavbarSection from "../components/NavbarSection";
 
 
 
@@ -11,28 +12,7 @@ const navigate = useNavigate();
   return (
     
     <Container fluid className="px-0" style={{ backgroundColor: '#e0e0e0' }}>
-      <Navbar bg="white" expand="lg" className="border-bottom px-4">
-        <Container fluid>
-          <Navbar.Brand
-            onClick={() => navigate('/')}
-            style={{ cursor: 'pointer' }}
-            className="fw-bold text-danger d-flex align-items-center"
-          >
-            Rental Iqra
-          </Navbar.Brand>
-          <Navbar.Toggle aria-controls="main-navbar-nav" />
-          <Navbar.Collapse id="main-navbar-nav" className="justify-content-end">
-            <Nav>
-              <Nav.Link href="#beranda">Beranda</Nav.Link>
-              <Nav.Link href="#layanan">Layanan</Nav.Link>
-              <Nav.Link href="#info">Info</Nav.Link>
-              <Nav.Link href="#lokasi">Lokasi</Nav.Link>
-              <Nav.Link href="#kontak">Kontak</Nav.Link>
-            </Nav>
-          </Navbar.Collapse>
-        </Container>
-      </Navbar>
-
+      <NavbarSection />
       <Container className="my-5">
         <Row>
             <Col md={8} className="mb-4 mb-md-0">
@@ -87,7 +67,7 @@ const navigate = useNavigate();
       </Container>
 
       <Container className="mb-5">
-        <div style={{ backgroundColor: '#6b0f1a', color: 'white', padding: '1rem' }} className=" text-white p-4 rounded shadow">
+        <div  className=" bg-dark text-white p-4 rounded shadow">
           <p className="mb-1">Merek Kendaraan: Toyota Xenia</p>
           <p>Jumlah Seat: 6 Seat</p>
           <h6>Keterangan:</h6>
@@ -107,7 +87,7 @@ const navigate = useNavigate();
        <hr style={{ borderTop: '5px solid #6b0f1a', width: '80%', margin: 'auto' }} />
       <Row className="justify-content-center mt-4">
         <Col md={6} className="d-flex justify-content-center">
-          <div style={{ backgroundColor: "#6b0f1a", padding: "10px", borderRadius: "8px" }}>
+          <div style={{padding: "10px", borderRadius: "8px" }} className="bg-dark">
             <img
               src="/assets/mobil4.png"
               alt="Toyota Xenia"

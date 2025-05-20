@@ -1,30 +1,5 @@
 import React from "react";
-import {
-  Container,
-  Row,
-  Col,
-  Navbar,
-  Nav,
-  Button,
-  Image,
-  Card,
-  InputGroup,
-  Form,
-  NavDropdown,
-} from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
-import {
-  FaCar,
-  FaMoneyBillWave,
-  FaMapMarkerAlt,
-  FaPhone,
-  FaEnvelope,
-  FaFacebookF,
-  FaInstagram,
-  FaTwitter,
-  FaCartPlus,
-  FaCheckSquare,
-} from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import HeroSection from "../components/HeroSection";
 import Top5MobilSection from "../components/Top5MobilSection";
