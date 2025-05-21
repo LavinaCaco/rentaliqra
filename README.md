@@ -60,5 +60,5 @@ git clone https://github.com/LavinaCaco/rentaliqra.git
 cd rentaliqra
 npm install
 npm install react-scripts
-npm start
-
+npm run build
+npx serve -s build
