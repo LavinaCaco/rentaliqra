@@ -1,5 +1,5 @@
 import React from 'react';
-import { Container, Row, Col, Navbar, Nav, Button, Table, Carousel} from 'react-bootstrap';
+import { Container, Row, Col, Navbar, Nav, Button, Table, Carousel, Card, } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {FaPhone} from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
