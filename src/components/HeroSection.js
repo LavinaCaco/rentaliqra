@@ -2,7 +2,7 @@ import React from "react";
 import { Container, Row, Col } from "react-bootstrap";
 
 export default function HeroSection() {
-  const videoUrl = "/assets/bghome.mp4";
+  const videoUrl = "/assets/bghome.webm";
 
   return (
     <div
@@ -17,7 +17,6 @@ export default function HeroSection() {
         textAlign: "center",
       }}
     >
-      {/* Video background */}
       <video
         autoPlay
         loop

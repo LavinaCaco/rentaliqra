@@ -4,21 +4,21 @@ import { Container, Row, Col, Card, Button } from "react-bootstrap";
 const carList = [
   {
     name: "Honda Brio",
-    image: "/assets/mobil3.jpg",
+    image: "/assets/mobil3.webp",
     matic: 275000,
     manual: 250000,
     capacity: 4,
   },
   {
     name: "Toyota Avanza",
-    image: "/assets/mobil3.jpg",
+    image: "/assets/mobil3.webp",
     matic: 300000,
     manual: 250000,
     capacity: 6,
   },
   {
     name: "Xpander",
-    image: "/assets/mobil3.jpg",
+    image: "/assets/mobil3.webp",
     matic: 350000,
     manual: 300000,
     capacity: 6,

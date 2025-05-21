@@ -2,7 +2,7 @@ import React from "react";
 import { FaWhatsapp } from "react-icons/fa";
 
 export default function WhatsAppFAB() {
-  const phoneNumber = "6281234567890"; // Ganti dengan nomor WhatsApp-mu (pakai kode negara tanpa +)
+  const phoneNumber = "6281234567890";
 
   return (
     <a

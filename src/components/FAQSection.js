@@ -3,7 +3,7 @@ import { Container, Row, Col, Accordion } from "react-bootstrap";
 
 export default function FAQAndTermsSection() {
   return (
-    <div className="py-5 bg-white">
+    <div className="py-5 bg-white" id="info">
       <Container>
         <Row>
           {/* Kolom Kiri - Syarat & Ketentuan */}

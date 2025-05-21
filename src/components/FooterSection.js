@@ -33,7 +33,7 @@ export default function FooterSection() {
       ></div>
 
       {/* Konten Utama */}
-      <Container style={{ position: "relative", zIndex: 2 }}>
+      <Container style={{ position: "relative", zIndex: 2 }} id="tentang">
         <Row className="mb-5">
           {/* Kontak */}
           <Col md={4}>
