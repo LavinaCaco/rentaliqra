@@ -91,13 +91,13 @@ export default function FooterSection() {
           <Col md={4}>
             <h5 className="fw-bold mb-3">Ikuti Kami</h5>
             <div className="d-flex mb-3">
-              <a href="https://www.facebook.com/" className="text-white me-3 fs-5">
+              <a href="https://www.facebook.com/iqrarent?mibextid=wwXIfr&rdid=a6ZoQJ0GE6x20YZQ&share_url=https%3A%2F%2Fwww.facebook.com%2Fshare%2F1AjdUeHyiM%2F%3Fmibextid%3DwwXIfr#" className="text-white me-3 fs-5">
                 <FaFacebookF />
               </a>
-              <a href="https://www.instagram.com/" className="text-white me-3 fs-5">
+              <a href="https://www.instagram.com/cv.rentalqra?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" className="text-white me-3 fs-5">
                 <FaInstagram />
               </a>
-              <a href="https://x.com/" className="text-white me-3 fs-5">
+              <a href="https://x.com/IqraPalu56053" className="text-white me-3 fs-5">
                 <FaTwitter />
               </a>
             </div>

@@ -69,7 +69,7 @@ export default function Mobil() {
       
                 <div className="d-flex align-items-center">
                   <Button
-                    href="#tentang"
+                    href={`https://wa.me/6281341017966`}
                     style={{
                       backgroundColor: "#dc3545",
                       borderColor: "#dc3545",

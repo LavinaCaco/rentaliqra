@@ -63,7 +63,7 @@ const navigate = useNavigate();
       
                 <div className="d-flex align-items-center">
                   <Button
-                    href="#tentang"
+                    href={`https://wa.me/6281341017966`}
                     style={{
                       backgroundColor: "#dc3545",
                       borderColor: "#dc3545",
@@ -121,7 +121,7 @@ const navigate = useNavigate();
               <Card className="h-100 shadow">
                 <Card.Img variant="top" src="/assets/admin.webp" style={{ height: '200px', width: '200px', objectFit: 'cover', borderRadius: '50%', margin: '20px auto 0' }}/>
                 <Card.Body>
-                  <Card.Title style={{ fontSize: '1rem' }}>Admin Cacomel Trans</Card.Title>
+                  <Card.Title style={{ fontSize: '1rem' }}>Admin Rental Iqra</Card.Title>
                   <Card.Text className="text-muted" style={{ fontSize: '0.875rem' }}>
                     <span>✅ Online</span><br />
                     <span>📧 Rental Iqra@admin</span>
