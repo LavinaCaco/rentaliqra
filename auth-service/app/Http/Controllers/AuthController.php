@@ -32,7 +32,7 @@ class AuthController extends Controller
         'email'      => $request->email,
         'phone'      => $request->phone,
         'password'   => Hash::make($request->password),
-        'level'      => 2, // otomatis user biasa
+        'level'      => 2, 
     ]);
 
 
@@ -55,6 +55,15 @@ class AuthController extends Controller
             'user' => $user,
             'redirect' => $user->level == 1 ? '/admin/dashboard' : '/', 
         ]);
+    }
+
+    public function logout(Request $request) 
+    {
+        $request->user()->currentAccessToken()->delete();
+
+        return response()->json([
+            'message' => 'Logout berhasil!'
+        ], 200);
     }
 
 }

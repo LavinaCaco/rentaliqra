@@ -1,19 +1,15 @@
-import React, { Suspense, lazy } from "react";
+import React, { Suspense, lazy, useState, useEffect } from "react"; // 1. Import hook
 import {
   Container,
   Row,
   Col,
-  Navbar,
-  Nav,
-  Button,
   Card,
+  Button,
+  Spinner // Tambahkan Spinner untuk loading
 } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
-import {
-  FaPhone,
-} from "react-icons/fa";
-import "bootstrap/dist/css/bootstrap.min.css";
 import { useNavigate } from "react-router-dom";
+import axios from 'axios'; // Import axios
 
 import SearchSection from "../components/SearchMobilSection";
 import FooterSection from "../components/FooterSection";
@@ -23,273 +19,93 @@ const NavbarSection = lazy(() => import("../components/NavbarSection"));
 
 export default function Mobil() {
   const navigate = useNavigate();
+
+  // 2. Tambahkan State untuk data mobil dan status loading
+  const [mobils, setMobils] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const API_URL = 'http://127.0.0.1:8000'; // Sesuaikan jika perlu
+
+  // 3. Gunakan useEffect untuk mengambil data dari API saat komponen dimuat
+  useEffect(() => {
+    const fetchMobils = async () => {
+      try {
+        const response = await axios.get(`${API_URL}/api/mobil`);
+        setMobils(response.data); // Simpan data ke state
+      } catch (error) {
+        console.error("Gagal mengambil data mobil:", error);
+        // Anda bisa menambahkan notifikasi error di sini jika perlu
+      } finally {
+        setLoading(false); // Hentikan status loading
+      }
+    };
+
+    fetchMobils();
+  }, []); // Array dependensi kosong agar hanya berjalan sekali
+
   return (
     <div style={{ fontFamily: "Poppins" }}>
+      <NavbarSection />
 
-      {/* <Navbar
-            expand="lg"
-            sticky="top"
-            className="py-3"
-            style={{
-              backgroundColor: "rgba(0, 0, 0, 0.9)",
-              backdropFilter: "blur(10px)",
-              WebkitBackdropFilter: "blur(10px)",
-              zIndex: 1000,
-            }}
-          >
-            <Container fluid className="px-4">
-              <Navbar.Brand
-                onClick={() => navigate("/")}
-                style={{
-                  cursor: "pointer",
-                  fontWeight: "bold",
-                  color: "white",
-                  fontSize: "28px",
-                  letterSpacing: "1px",
-                }}
-              >
-                Rental IQRA
-              </Navbar.Brand>
-      
-              <Navbar.Toggle aria-controls="main-navbar-nav" className="bg-light" />
-      
-              <Navbar.Collapse id="main-navbar-nav">
-                <Nav className="mx-auto my-2 my-lg-0">
-                  <Nav.Link href="/" className="text-white fw-semibold mx-2">
-                    Beranda
-                  </Nav.Link>
-                  <Nav.Link href="/mobil" className="text-white fw-semibold mx-2">
-                    Cari Mobil
-                  </Nav.Link>
-                  <Nav.Link href="#layanan" className="text-white fw-semibold mx-2">
-                    Layanan
-                  </Nav.Link>
-                  <Nav.Link href="#lokasi" className="text-white fw-semibold mx-2">
-                    Lokasi
-                  </Nav.Link>
-                </Nav>
-      
-                <div className="d-flex align-items-center">
-                  <Button
-                    href={`https://wa.me/6281341017966`}
-                    style={{
-                      backgroundColor: "#dc3545",
-                      borderColor: "#dc3545",
-                      color: "#fff",
-                    }}
-                    className="d-flex align-items-center"
-                  >
-                    Kontak
-                    <FaPhone className="m-2" />
-                  </Button>
-                </div>
-              </Navbar.Collapse>
-            </Container>
-        </Navbar> */}
-        <NavbarSection />
+      <div className="py-4 my-4" id="layanan">
+        <h1 className="fw-bold text-center">Temukan Mobil Kebutuhanmu.</h1>
+        <p className="text-center">
+          Temukan mobil yang pas untuk setiap kebutuhanmu harian, mingguan, atau
+          perjalanan jauh di IQRA rental. <br />
+          Proses mudah, armada siap jalan!
+        </p>
+      </div>
 
-        <div className="py-4 my-4" id="layanan">
-          <h1 className="fw-bold text-center">Temukan Mobil Kebutuhanmu. </h1>
-          <p className="text-center">
-            Temukan mobil yang pas untuk setiap kebutuhanmu harian, mingguan, atau
-            perjalanan jauh di IQRA rental. <br />
-            Proses mudah, armada siap jalan!
-          </p>
-        </div>
-
-      {/* Search */}
       <SearchSection />
 
       <div>
         <Container className="pt-3 py-4 my-4">
-          <Row className="g-3">
-            <Col md={4}>
-              <Card className="h-100">
-                <Card.Img
-                  variant="top"
-                  src="/assets/mobil4.webp"
-                  style={{ height: "300px", objectFit: "cover" }}
-                />
-                <Card.Body>
-                  <Card.Title className="fw-bold">Rp.250.000/24h</Card.Title>
-                  <Card.Text>Toyota Xenia 2013</Card.Text>
-                </Card.Body>
-                <Card.Footer>
-                  <Button variant="dark" onClick={() => navigate("/sewa")}>
-                    Sewa
-                  </Button>
-                </Card.Footer>
-              </Card>
-            </Col>
-
-            <Col md={4}>
-              <Card className="h-100">
-                <Card.Img
-                  variant="top"
-                  src="/assets/mobil3.webp"
-                  style={{ height: "300px", objectFit: "cover" }}
-                />
-                <Card.Body>
-                  <Card.Title className="fw-bold">Rp.250.000/24h</Card.Title>
-                  <Card.Text>Toyota Xenia 2013</Card.Text>
-                </Card.Body>
-                <Card.Footer>
-                  <Button variant="dark" onClick={() => navigate("/sewa")}>
-                    Sewa
-                  </Button>
-                </Card.Footer>
-              </Card>
-            </Col>
-
-            <Col md={4}>
-              <Card className="h-100">
-                <Card.Img
-                  variant="top"
-                  src="/assets/mobil3.webp"
-                  style={{ height: "300px", objectFit: "cover" }}
-                />
-                <Card.Body>
-                  <Card.Title className="fw-bold">Rp.250.000/24h</Card.Title>
-                  <Card.Text>Toyota Xenia 2013</Card.Text>
-                </Card.Body>
-                <Card.Footer>
-                  <Button variant="dark" onClick={() => navigate("/sewa")}>
-                    Sewa
-                  </Button>
-                </Card.Footer>
-              </Card>
-            </Col>
-          </Row>
-        </Container>
-        <Container className="pt-3 py-4 my-4">
-          <Row className="g-3">
-            <Col md={4}>
-              <Card className="h-100">
-                <Card.Img
-                  variant="top"
-                  src="/assets/mobil3.webp"
-                  style={{ height: "300px", objectFit: "cover" }}
-                />
-                <Card.Body>
-                  <Card.Title className="fw-bold">Rp.250.000/24h</Card.Title>
-                  <Card.Text>Toyota Xenia 2013</Card.Text>
-                </Card.Body>
-                <Card.Footer>
-                  <Button variant="dark" onClick={() => navigate("/sewa")}>
-                    Sewa
-                  </Button>
-                </Card.Footer>
-              </Card>
-            </Col>
-
-            <Col md={4}>
-              <Card className="h-100">
-                <Card.Img
-                  variant="top"
-                  src="/assets/mobil4.webp"
-                  style={{ height: "300px", objectFit: "cover" }}
-                />
-                <Card.Body>
-                  <Card.Title className="fw-bold">Rp.250.000/24h</Card.Title>
-                  <Card.Text>Toyota Xenia 2013</Card.Text>
-                </Card.Body>
-                <Card.Footer>
-                  <Button variant="dark" onClick={() => navigate("/sewa")}>
-                    Sewa
-                  </Button>
-                </Card.Footer>
-              </Card>
-            </Col>
-
-            <Col md={4}>
-              <Card className="h-100">
-                <Card.Img
-                  variant="top"
-                  src="/assets/mobil4.webp"
-                  style={{ height: "300px", objectFit: "cover" }}
-                />
-                <Card.Body>
-                  <Card.Title className="fw-bold">Rp.250.000/24h</Card.Title>
-                  <Card.Text>Toyota Xenia 2013</Card.Text>
-                </Card.Body>
-                <Card.Footer>
-                  <Button variant="dark" onClick={() => navigate("/sewa")}>
-                    Sewa
-                  </Button>
-                </Card.Footer>
-              </Card>
-            </Col>
-          </Row>
-        </Container>
-        <Container className="pt-3 py-4 my-4">
-          <Row className="g-3">
-            <Col md={4}>
-              <Card className="h-100">
-                <Card.Img
-                  variant="top"
-                  src="/assets/mobil4.webp"
-                  style={{ height: "300px", objectFit: "cover" }}
-                />
-                <Card.Body>
-                  <Card.Title className="fw-bold">Rp.250.000/24h</Card.Title>
-                  <Card.Text>Toyota Xenia 2013</Card.Text>
-                </Card.Body>
-                <Card.Footer>
-                  <Button variant="dark" onClick={() => navigate("/sewa")}>
-                    Sewa
-                  </Button>
-                </Card.Footer>
-              </Card>
-            </Col>
-
-            <Col md={4}>
-              <Card className="h-100">
-                <Card.Img
-                  variant="top"
-                  src="/assets/mobil4.webp"
-                  style={{ height: "300px", objectFit: "cover" }}
-                />
-                <Card.Body>
-                  <Card.Title className="fw-bold">Rp.250.000/24h</Card.Title>
-                  <Card.Text>Toyota Xenia 2013</Card.Text>
-                </Card.Body>
-                <Card.Footer>
-                  <Button variant="dark" onClick={() => navigate("/sewa")}>
-                    Sewa
-                  </Button>
-                </Card.Footer>
-              </Card>
-            </Col>
-
-            <Col md={4}>
-              <Card className="h-100">
-                <Card.Img
-                  variant="top"
-                  src="/assets/mobil4.webp"
-                  style={{ height: "300px", objectFit: "cover" }}
-                />
-                <Card.Body>
-                  <Card.Title className="fw-bold">Rp.250.000/24h</Card.Title>
-                  <Card.Text>Toyota Xenia 2013</Card.Text>
-                </Card.Body>
-                <Card.Footer>
-                  <Button variant="dark" onClick={() => navigate("/sewa")}>
-                    Sewa
-                  </Button>
-                </Card.Footer>
-              </Card>
-            </Col>
+          {/* 4. Ganti Card statis dengan proses mapping (looping) dan conditional rendering */}
+          <Row className="g-4"> {/* g-4 untuk memberi jarak lebih antar card */}
+            {loading ? (
+              // Tampilkan spinner saat loading
+              <Col className="text-center">
+                <Spinner animation="border" role="status">
+                  <span className="visually-hidden">Loading...</span>
+                </Spinner>
+              </Col>
+            ) : mobils.length > 0 ? (
+              // Jika data ada, lakukan mapping
+              mobils.map((mobil) => (
+                <Col md={4} key={mobil.id}>
+                  <Card className="h-100 shadow-sm">
+                    <Card.Img
+                      variant="top"
+                      // 5. Menggunakan data dinamis dari API
+                      src={`${API_URL}/storage/mobil/${mobil.foto}`}
+                      style={{ height: "250px", objectFit: "cover" }}
+                      alt={mobil.merek}
+                    />
+                    <Card.Body>
+                      <Card.Title className="fw-bold">
+                        Rp.{new Intl.NumberFormat('id-ID').format(mobil.harga)}/24h
+                      </Card.Title>
+                      <Card.Text>{mobil.merek} - {mobil.seat} Kursi</Card.Text>
+                    </Card.Body>
+                    <Card.Footer className="border-0 bg-white">
+                      <Button variant="dark" className="w-100" onClick={() => navigate("/sewa")}>
+                        Sewa
+                      </Button>
+                    </Card.Footer>
+                  </Card>
+                </Col>
+              ))
+            ) : (
+              // Tampilkan pesan jika tidak ada data
+              <Col className="text-center">
+                <p>Saat ini belum ada mobil yang tersedia.</p>
+              </Col>
+            )}
           </Row>
         </Container>
       </div>
 
-      {/* Maps */}
       <MapsSection />
-
-      {/* FAB */}
       <WhatsAppFAB />
-
-      {/* Footer */}
       <FooterSection />
     </div>
   );

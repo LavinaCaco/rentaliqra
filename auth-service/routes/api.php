@@ -3,7 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
-
+use App\Http\Controllers\Api\MobilController; 
 
 /*
 |--------------------------------------------------------------------------
@@ -26,6 +26,14 @@ Route::get('/test', function() {
     ]);
 });
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/user', function (Request $request) {
+        return $request->user();
+    });
+
+    Route::post('/logout', [AuthController::class, 'logout']); // <-- TAMBAHKAN RUTE INI
 });
+
+
+Route::apiResource('/mobil', MobilController::class)->except(['destroy']);
+Route::delete('/mobil/{mobil}', [MobilController::class, 'delete']);
