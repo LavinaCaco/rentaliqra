@@ -27,11 +27,14 @@ class AuthController extends Controller
         }
 
         $user = User::create([
-            'name' => $request->first_name . ' ' . $request->last_name,
-            'email'      => $request->email,
-            'phone' => $request->phone,
-            'password'   => Hash::make($request->password),
-        ]);
+        'first_name' => $request->first_name,
+        'last_name'  => $request->last_name,
+        'email'      => $request->email,
+        'phone'      => $request->phone,
+        'password'   => Hash::make($request->password),
+        'level'      => 2, // otomatis user biasa
+    ]);
+
 
         return response()->json(['message' => 'Register successful'], 201);
     }
@@ -41,15 +44,17 @@ class AuthController extends Controller
         $user = User::where('email', $request->email)->first();
 
         if (!$user || !Hash::check($request->password, $user->password)) {
-            return response()->json(['message' => 'Invalid credentials'], 401);
+            return response()->json(['message' => 'Email atau password salah'], 401);
         }
 
         $token = $user->createToken('auth_token')->plainTextToken;
 
         return response()->json([
-            'message' => 'Login successful',
-            'token'   => $token,
-            'user'    => $user,
+            'message' => 'Login berhasil',
+            'token' => $token,
+            'user' => $user,
+            'redirect' => $user->level == 1 ? '/admin/dashboard' : '/', 
         ]);
     }
+
 }

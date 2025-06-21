@@ -47,6 +47,11 @@ export default function Register() {
       const msg = error.response?.data?.message || "Registrasi gagal, harap ulang kembali!.";
       setMessage({ type: "danger", text: msg });
     }
+    
+    if (form.password !== form.password_confirmation) {
+    return setMessage({ type: "danger", text: "Password tidak cocok." });
+  }
+
   };
 
   return (
@@ -64,6 +69,7 @@ export default function Register() {
             <Form.Control
                 type="text"
                 name="first_name"
+                value={form.first_name}
                 required
                 onChange={handleChange}
             />
@@ -73,6 +79,7 @@ export default function Register() {
             <Form.Control
                 type="text"
                 name="last_name"
+                value={form.last_name}
                 required
                 onChange={handleChange}
             />
@@ -83,6 +90,7 @@ export default function Register() {
             <Form.Control
                 type="email"
                 name="email"
+                value={form.email}
                 required
                 onChange={handleChange}
             />
@@ -93,6 +101,7 @@ export default function Register() {
             <Form.Control
                 type="phone"
                 name="phone"
+                value={form.phone}
                 required
                 onChange={handleChange}
             />
@@ -103,6 +112,7 @@ export default function Register() {
             <Form.Control
                 type="password"
                 name="password"
+                value={form.password}
                 required
                 onChange={handleChange}
             />
@@ -113,6 +123,7 @@ export default function Register() {
             <Form.Control
                 type="password"
                 name="password_confirmation"
+                value={form.password_confirmation}
                 required
                 onChange={handleChange}
             />

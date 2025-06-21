@@ -1,12 +1,22 @@
 import React from "react";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
+
 import Home from "./view/home";
 import Mobil from "./view/mobil";
 import Sewa from "./view/sewa";
 import Login from "./view/login";
 import Register from "./view/register";
+
+//Admin
+import AdminLayout from "./layouts/AdminLayout"; 
+import Dashboard from "./view/admin/dashboard";
+import Tabel from "./view/admin/tabel";
+
+
+// Lainnya
 import ScrollToTop from "./components/ScrollToTop";
 import "./App.css";
+import { Table } from "react-bootstrap";
 
 export default function App() {
   return (
@@ -18,6 +28,16 @@ export default function App() {
         <Route path="/sewa" element={<Sewa />} />
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
+
+        <Route path="/admin" element={<AdminLayout />}>
+          
+          <Route path="dashboard" element={<Dashboard />} />
+          <Route path="tabel" element={<Tabel />} />
+
+          
+          <Route index element={<Navigate to="dashboard" replace />} />
+
+        </Route>
       </Routes>
     </>
   );

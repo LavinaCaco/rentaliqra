@@ -20,22 +20,30 @@ export default function Login() {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    setMessage(null);
+  e.preventDefault();
+  setMessage(null);
 
-    try {
-      const response = await api.post("/login", form);
-      localStorage.setItem("token", response.data.token);
-      localStorage.setItem("user", JSON.stringify(response.data.user));
+  try {
+    const response = await api.post("/login", form);
+    const { token, user, redirect } = response.data;
 
-      setMessage({ type: "success", text: "Login berhasil!" });
-      navigate("/");
-    } catch (error) {
-      const msg =
-        error.response?.data?.message || "Login gagal, periksa email/password.";
-      setMessage({ type: "danger", text: msg });
-    }
-  };
+    localStorage.setItem("token", token);
+    localStorage.setItem("user", JSON.stringify(response.data.user));
+
+    setMessage({ type: "success", text: "Login berhasil!" });
+
+    const destination = redirect.startsWith('/') ? redirect : `/${redirect}`;
+    navigate(destination);
+
+    // Redirect berdasarkan level user (dikirim dari backend via "redirect")
+    navigate(redirect);
+  } catch (error) {
+    const msg =
+      error.response?.data?.message || "Login gagal, periksa email/password.";
+    setMessage({ type: "danger", text: msg });
+  }
+};
+
 
   return (
     <div style={{ fontFamily: "Poppins" }}>

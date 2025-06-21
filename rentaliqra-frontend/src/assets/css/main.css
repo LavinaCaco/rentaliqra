@@ -1,0 +1,71 @@
+body {
+  background-color: #f4f3ef;
+}
+
+.wrapper {
+  display: flex;
+  width: 100%;
+}
+
+.sidebar {
+  width: 260px;
+  background: #20232a; /* Warna gelap untuk sidebar */
+  color: white;
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  z-index: 100;
+  box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 3px 1px -2px rgba(0,0,0,0.12), 0 1px 5px 0 rgba(0,0,0,0.2);
+}
+
+.sidebar-header {
+  padding: 18px 20px;
+  text-align: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+.sidebar-header a {
+    color: white;
+    text-decoration: none;
+}
+.sidebar-header .logo-normal {
+    font-size: 1.2rem;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+.sidebar .nav-link {
+  color: #ccc;
+  display: flex;
+  align-items: center;
+  padding: 12px 25px;
+  gap: 15px;
+  transition: all 0.3s;
+}
+.sidebar .nav-link:hover, .sidebar .nav-item.active .nav-link {
+  color: white;
+  background: rgba(255, 255, 255, 0.1);
+}
+.sidebar .nav-link p {
+    margin-bottom: 0;
+}
+
+.main-panel {
+  margin-left: 260px; /* Sesuaikan dengan lebar sidebar */
+  width: calc(100% - 260px);
+  min-height: 100vh;
+  position: relative;
+}
+
+.content {
+  padding: 30px;
+  margin-top: 70px; /* Beri ruang untuk navbar */
+}
+
+/* Membuat navbar "mengambang" di atas konten */
+.navbar-absolute {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 100%;
+    z-index: 10;
+}

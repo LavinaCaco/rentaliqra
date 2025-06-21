@@ -71,32 +71,32 @@ export default function NavbarSection() {
 
           <div className="d-flex align-items-center">
             {user ? (
-              <Dropdown>
-                <Dropdown.Toggle
-                  variant="light"
-                  className="text-dark bg-white border-0"
-                >
-                  {user.name}
-                </Dropdown.Toggle>
-
-                <Dropdown.Menu align="end">
-                  <Dropdown.Item onClick={handleLogout}>
-                    Logout
-                  </Dropdown.Item>
-                </Dropdown.Menu>
-              </Dropdown>
-            ) : (
-              <Button
-                onClick={() => navigate("/login")}
-                style={{
-                  backgroundColor: "#dc3545",
-                  borderColor: "#dc3545",
-                  color: "#fff",
-                }}
+            <Dropdown>
+              <Dropdown.Toggle
+                variant="light"
+                className="text-dark bg-white border-0"
               >
-                Login
-              </Button>
-            )}
+                {user.first_name} {user.last_name}
+              </Dropdown.Toggle>
+
+              <Dropdown.Menu align="end">
+                <Dropdown.Item onClick={handleLogout}>
+                  Logout
+                </Dropdown.Item>
+              </Dropdown.Menu>
+            </Dropdown>
+          ) : (
+            <Button
+              onClick={() => navigate("/login")}
+              style={{
+                backgroundColor: "#dc3545",
+                borderColor: "#dc3545",
+                color: "#fff",
+              }}
+            >
+              Login
+            </Button>
+          )}
           </div>
         </Navbar.Collapse>
       </Container>
