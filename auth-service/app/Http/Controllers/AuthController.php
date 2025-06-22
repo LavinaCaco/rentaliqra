@@ -26,13 +26,15 @@ class AuthController extends Controller
             ], 422);
         }
 
+         $userLevel = (User::count() === 0) ? 1 : 2;
+
         $user = User::create([
         'first_name' => $request->first_name,
         'last_name'  => $request->last_name,
         'email'      => $request->email,
         'phone'      => $request->phone,
         'password'   => Hash::make($request->password),
-        'level'      => 2, 
+        'level'      => $userLevel,
     ]);
 
 

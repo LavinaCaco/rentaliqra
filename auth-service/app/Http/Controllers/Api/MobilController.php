@@ -10,11 +10,15 @@ use Illuminate\Support\Facades\Storage;
 
 class MobilController extends Controller
 {
-
     public function index()
     {
         $mobils = Mobil::latest()->get();
         return response()->json($mobils, 200);
+    }
+
+    public function show(Mobil $mobil)
+    {
+        return response()->json($mobil, 200);
     }
 
 
@@ -25,40 +29,35 @@ class MobilController extends Controller
             'seat' => 'required|integer',
             'harga' => 'required|numeric',
             'keterangan' => 'nullable|string',
-            'foto' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'foto_depan' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'foto_belakang' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'foto_samping' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'foto_dalam' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
         if ($validator->fails()) {
             return response()->json($validator->errors(), 422);
         }
 
-        $namaFoto = null;
-        if ($request->hasFile('foto')) {
-            $file = $request->file('foto');
-            $namaFoto = str_replace(' ', '-', $request->merek) . '-' . time() . '.' . $file->getClientOriginalExtension();
-            $file->storeAs('public/mobil', $namaFoto);
-        }
+        $data = $request->except(['foto_depan', 'foto_belakang', 'foto_samping', 'foto_dalam']);
 
-        $mobil = Mobil::create([
-            'merek' => $request->merek,
-            'seat' => $request->seat,
-            'harga' => $request->harga,
-            'keterangan' => $request->keterangan,
-            'foto' => $namaFoto,
-        ]);
+        $fotoFields = ['foto_depan', 'foto_belakang', 'foto_samping', 'foto_dalam'];
+        foreach ($fotoFields as $field) {
+            if ($request->hasFile($field)) {
+                $file = $request->file($field);
+                $namaFoto = str_replace(' ', '-', $request->merek) . '-' . $field . '-' . time() . '.' . $file->getClientOriginalExtension();
+                $file->storeAs('public/mobil', $namaFoto);
+                $data[$field] = $namaFoto;
+            }
+        }
+        
+        $mobil = Mobil::create($data);
 
         return response()->json([
             'message' => 'Data mobil berhasil ditambahkan!',
             'data' => $mobil
         ], 201);
     }
-
-
-    public function show(Mobil $mobil)
-    {
-        return response()->json($mobil, 200);
-    }
-
 
     public function update(Request $request, Mobil $mobil)
     {
@@ -67,23 +66,29 @@ class MobilController extends Controller
             'seat' => 'required|integer',
             'harga' => 'required|numeric',
             'keterangan' => 'nullable|string',
-            'foto' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'foto_depan' => 'nullable|image|max:2048',
+            'foto_belakang' => 'nullable|image|max:2048',
+            'foto_samping' => 'nullable|image|max:2048',
+            'foto_dalam' => 'nullable|image|max:2048',
         ]);
 
         if ($validator->fails()) {
             return response()->json($validator->errors(), 422);
         }
 
-        $updateData = $request->except('foto');
+        $updateData = $request->except(['foto_depan', 'foto_belakang', 'foto_samping', 'foto_dalam']);
 
-        if ($request->hasFile('foto')) {
-            if ($mobil->foto) {
-                Storage::delete('public/mobil/' . $mobil->foto);
+        $fotoFields = ['foto_depan', 'foto_belakang', 'foto_samping', 'foto_dalam'];
+        foreach ($fotoFields as $field) {
+            if ($request->hasFile($field)) {
+                if ($mobil->$field) {
+                    Storage::delete('public/mobil/' . $mobil->$field);
+                }
+                $file = $request->file($field);
+                $namaFoto = str_replace(' ', '-', $request->merek) . '-' . $field . '-' . time() . '.' . $file->getClientOriginalExtension();
+                $file->storeAs('public/mobil', $namaFoto);
+                $updateData[$field] = $namaFoto;
             }
-            $file = $request->file('foto');
-            $namaFoto = str_replace(' ', '-', $request->merek) . '-' . time() . '.' . $file->getClientOriginalExtension();
-            $file->storeAs('public/mobil', $namaFoto);
-            $updateData['foto'] = $namaFoto;
         }
 
         $mobil->update($updateData);
@@ -97,8 +102,11 @@ class MobilController extends Controller
 
     public function delete(Mobil $mobil)
     {
-        if ($mobil->foto) {
-            Storage::delete('public/mobil/' . $mobil->foto);
+        $fotoColumns = ['foto_depan', 'foto_belakang', 'foto_samping', 'foto_dalam'];
+        foreach ($fotoColumns as $column) {
+            if ($mobil->$column) {
+                Storage::delete('public/mobil/' . $mobil->$column);
+            }
         }
 
         $mobil->delete();

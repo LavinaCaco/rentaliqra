@@ -7,13 +7,11 @@ import Sewa from "./view/sewa";
 import Login from "./view/login";
 import Register from "./view/register";
 
-//Admin
 import AdminLayout from "./layouts/AdminLayout"; 
 import Dashboard from "./view/admin/dashboard";
 import Tabel from "./view/admin/tabel";
+import ProtectedRoute from './components/ProtectedRoute';
 
-
-// Lainnya
 import ScrollToTop from "./components/ScrollToTop";
 import "./App.css";
 import { Table } from "react-bootstrap";
@@ -25,9 +23,18 @@ export default function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/mobil" element={<Mobil />} />
-        <Route path="/sewa" element={<Sewa />} />
+        <Route path="/sewa/:id" element={<Sewa />} />
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
+
+         <Route 
+          path="/sewa/:id"
+          element={
+            <ProtectedRoute>
+              <Sewa />
+            </ProtectedRoute>
+          } 
+        />
 
         <Route path="/admin" element={<AdminLayout />}>
           

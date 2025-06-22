@@ -16,6 +16,9 @@ class Mobil extends Model
         'seat',
         'harga',
         'keterangan',
-        'foto',
+        'foto_depan',
+        'foto_belakang',
+        'foto_samping',
+        'foto_dalam',
     ];
 }

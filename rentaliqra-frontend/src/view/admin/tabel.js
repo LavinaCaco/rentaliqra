@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Row, Col, Card, Button, Modal, Form, InputGroup, Alert, Table } from 'react-bootstrap';
+import { Container, Row, Col, Card, Button, Modal, Form, Alert, Table, Spinner } from 'react-bootstrap';
 import { Formik } from 'formik';
 import * as yup from 'yup';
 import axios from 'axios';
@@ -44,31 +44,30 @@ const Tabel = () => {
         setEditingMobil(mobil);
         setShowModal(true);
     };
-
+    
     const schema = yup.object().shape({
         merek: yup.string().required("Merek wajib diisi"),
         seat: yup.number().required("Jumlah seat wajib diisi").positive().integer(),
         harga: yup.number().required("Harga wajib diisi").positive(),
         keterangan: yup.string().nullable(),
-        foto: yup.mixed().when('editing', {
-            is: false, 
-            then: (schema) => schema.required('Foto wajib diunggah'),
-            otherwise: (schema) => schema.nullable(),
-        }),
+        foto_depan: yup.mixed().nullable(),
+        foto_belakang: yup.mixed().nullable(),
+        foto_samping: yup.mixed().nullable(),
+        foto_dalam: yup.mixed().nullable(),
     });
 
     const handleFormSubmit = async (values, { setSubmitting, resetForm }) => {
         const formData = new FormData();
         
-        Object.entries(values).forEach(([key, value]) => {
-            if (key === 'foto') {
-                if (value) { 
-                    formData.append(key, value);
-                }
-            } else {
-                formData.append(key, value || '');
-            }
-        });
+        formData.append('merek', values.merek);
+        formData.append('seat', values.seat);
+        formData.append('harga', values.harga);
+        formData.append('keterangan', values.keterangan || '');
+
+        if (values.foto_depan) formData.append('foto_depan', values.foto_depan);
+        if (values.foto_belakang) formData.append('foto_belakang', values.foto_belakang);
+        if (values.foto_samping) formData.append('foto_samping', values.foto_samping);
+        if (values.foto_dalam) formData.append('foto_dalam', values.foto_dalam);
 
         const isEditing = !!editingMobil;
         const url = isEditing ? `${API_URL}/api/mobil/${editingMobil.id}` : `${API_URL}/api/mobil`;
@@ -122,15 +121,7 @@ const Tabel = () => {
                         <Card.Body>
                             <Table striped bordered hover responsive>
                                 <thead>
-                                    <tr>
-                                        <th>No</th>
-                                        <th>Foto</th>
-                                        <th>Merek</th>
-                                        <th>Seat</th>
-                                        <th>Harga</th>
-                                        <th>Keterangan</th>
-                                        <th>Aksi</th>
-                                    </tr>
+                                    <tr><th>#</th><th>Foto</th><th>Merek</th><th>Seat</th><th>Harga</th><th>Keterangan</th><th>Aksi</th></tr>
                                 </thead>
                                 <tbody>
                                     {loading ? ( <tr><td colSpan="7" className="text-center">Loading...</td></tr>
@@ -138,7 +129,9 @@ const Tabel = () => {
                                         mobils.map((mobil, index) => (
                                             <tr key={mobil.id}>
                                                 <td>{index + 1}</td>
-                                                <td>{mobil.foto && (<img src={`${API_URL}/storage/mobil/${mobil.foto}`} alt={mobil.merek} style={{ width: '100px', height: 'auto', borderRadius: '4px' }}/>)}</td>
+                                                <td>
+                                                    {mobil.foto_depan && (<img src={`${API_URL}/storage/mobil/${mobil.foto_depan}`} alt={mobil.merek} style={{ width: '100px', height: 'auto', borderRadius: '4px' }}/>)}
+                                                </td>
                                                 <td>{mobil.merek}</td><td>{mobil.seat}</td>
                                                 <td>Rp {new Intl.NumberFormat('id-ID').format(mobil.harga)}</td>
                                                 <td>{mobil.keterangan || '-'}</td>
@@ -162,8 +155,8 @@ const Tabel = () => {
                     onSubmit={handleFormSubmit}
                     initialValues={
                         editingMobil 
-                        ? { ...editingMobil, foto: null } 
-                        : { merek: '', seat: '', harga: '', keterangan: '', foto: null }
+                        ? { ...editingMobil, foto_depan: null, foto_belakang: null, foto_samping: null, foto_dalam: null } 
+                        : { merek: '', seat: '', harga: '', keterangan: '', foto_depan: null, foto_belakang: null, foto_samping: null, foto_dalam: null }
                     }
                     enableReinitialize
                 >
@@ -194,16 +187,37 @@ const Tabel = () => {
                                     <Form.Label>Keterangan</Form.Label>
                                     <Form.Control as="textarea" rows={3} name="keterangan" value={values.keterangan || ''} onChange={handleChange} isInvalid={!!errors.keterangan}/>
                                 </Form.Group>
-                                <Form.Group controlId="validationFormikFoto" className="mb-3">
-                                    <Form.Label>Foto</Form.Label>
-                                    <Form.Control type="file" name="foto" onChange={(event) => setFieldValue("foto", event.currentTarget.files[0])} isInvalid={!!errors.foto}/>
-                                    {editingMobil && editingMobil.foto && !values.foto && (
-                                        <Form.Text muted>
-                                            File saat ini: {editingMobil.foto}. Kosongkan jika tidak ingin ganti.
-                                        </Form.Text>
-                                    )}
-                                    <Form.Control.Feedback type="invalid">{errors.foto}</Form.Control.Feedback>
-                                </Form.Group>
+
+                                <Row>
+                                    <Col md={6}>
+                                        <Form.Group controlId="validationFormikFotoDepan" className="mb-3">
+                                            <Form.Label>Foto Depan</Form.Label>
+                                            <Form.Control type="file" name="foto_depan" onChange={(event) => setFieldValue("foto_depan", event.currentTarget.files[0])} />
+                                            {editingMobil && editingMobil.foto_depan && <Form.Text muted>File saat ini: {editingMobil.foto_depan}</Form.Text>}
+                                        </Form.Group>
+                                    </Col>
+                                    <Col md={6}>
+                                        <Form.Group controlId="validationFormikFotoBelakang" className="mb-3">
+                                            <Form.Label>Foto Belakang</Form.Label>
+                                            <Form.Control type="file" name="foto_belakang" onChange={(event) => setFieldValue("foto_belakang", event.currentTarget.files[0])} />
+                                            {editingMobil && editingMobil.foto_belakang && <Form.Text muted>File saat ini: {editingMobil.foto_belakang}</Form.Text>}
+                                        </Form.Group>
+                                    </Col>
+                                    <Col md={6}>
+                                        <Form.Group controlId="validationFormikFotoSamping" className="mb-3">
+                                            <Form.Label>Foto Samping</Form.Label>
+                                            <Form.Control type="file" name="foto_samping" onChange={(event) => setFieldValue("foto_samping", event.currentTarget.files[0])} />
+                                            {editingMobil && editingMobil.foto_samping && <Form.Text muted>File saat ini: {editingMobil.foto_samping}</Form.Text>}
+                                        </Form.Group>
+                                    </Col>
+                                    <Col md={6}>
+                                        <Form.Group controlId="validationFormikFotoDalam" className="mb-3">
+                                            <Form.Label>Foto Dalam</Form.Label>
+                                            <Form.Control type="file" name="foto_dalam" onChange={(event) => setFieldValue("foto_dalam", event.currentTarget.files[0])} />
+                                            {editingMobil && editingMobil.foto_dalam && <Form.Text muted>File saat ini: {editingMobil.foto_dalam}</Form.Text>}
+                                        </Form.Group>
+                                    </Col>
+                                </Row>
                             </Modal.Body>
                             <Modal.Footer>
                                 <Button variant="secondary" onClick={handleCloseModal}>Close</Button>
