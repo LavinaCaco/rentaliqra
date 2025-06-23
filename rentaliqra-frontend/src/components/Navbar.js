@@ -35,7 +35,6 @@ const TopNavbar = () => {
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
                 <Navbar.Collapse id="basic-navbar-nav" className="justify-content-end">
                     <Nav>
-                        <Nav.Link href="#account">Account</Nav.Link>
                         <Nav.Link as="button" onClick={handleLogout} className="btn btn-link nav-link">
                             Log out
                         </Nav.Link>

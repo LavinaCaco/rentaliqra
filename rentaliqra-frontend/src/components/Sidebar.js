@@ -7,8 +7,8 @@ const Sidebar = () => {
   const location = useLocation();
   const navItems = [
     { path: '/admin/dashboard', icon: <BsGrid />, name: 'Dashboard' },
-    { path: '/admin/user-profile', icon: <BsPerson />, name: 'User Profile' },
     { path: '/admin/tabel', icon: <BsTable />, name: 'Table List' },
+    { path: '/admin/users', icon: <BsPerson />, name: 'Users' },
   ];
 
   return (

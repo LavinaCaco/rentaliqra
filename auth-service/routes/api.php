@@ -3,37 +3,37 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\Api\MobilController; 
+use App\Http\Controllers\Api\MobilController;
+use App\Http\Controllers\Api\UserController;
 
 /*
 |--------------------------------------------------------------------------
 | API Routes
 |--------------------------------------------------------------------------
-|
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "api" middleware group. Make something great!
-|
 */
-
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 
-Route::get('/test', function() {
-    return response()->json([
-        'message' => 'Temukan Mobil Kebutuhanmu.'
-    ]);
-});
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user', function (Request $request) {
         return $request->user();
     });
 
-    Route::post('/logout', [AuthController::class, 'logout']); // <-- TAMBAHKAN RUTE INI
+    Route::post('/logout', [AuthController::class, 'logout']);
 });
 
 
-Route::apiResource('/mobil', MobilController::class)->except(['destroy']);
-Route::delete('/mobil/{mobil}', [MobilController::class, 'delete']);
+Route::middleware(['auth:sanctum', 'is_admin'])->group(function () {
+    Route::post('/users', [UserController::class, 'addadmin']);
+    Route::apiResource('/users', UserController::class)->except(['store']);
+    
+    Route::post('/mobil', [MobilController::class, 'store']);
+    Route::post('/mobil/{mobil}', [MobilController::class, 'update']);
+    Route::delete('/mobil/{mobil}', [MobilController::class, 'delete']);
+});
+
+
+Route::get('/mobil', [MobilController::class, 'index']);
+Route::get('/mobil/{mobil}', [MobilController::class, 'show']);

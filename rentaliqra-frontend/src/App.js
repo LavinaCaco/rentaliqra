@@ -6,6 +6,7 @@ import Mobil from "./view/mobil";
 import Sewa from "./view/sewa";
 import Login from "./view/login";
 import Register from "./view/register";
+import Users from './view/admin/users'; 
 
 import AdminLayout from "./layouts/AdminLayout"; 
 import Dashboard from "./view/admin/dashboard";
@@ -39,6 +40,7 @@ export default function App() {
         <Route path="/admin" element={<AdminLayout />}>
           
           <Route path="dashboard" element={<Dashboard />} />
+          <Route path="users" element={<Users />} />
           <Route path="tabel" element={<Tabel />} />
 
           
