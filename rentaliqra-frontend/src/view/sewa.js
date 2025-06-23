@@ -105,7 +105,7 @@ export default function Sewa() {
                             <Card.Body className="d-flex flex-column justify-content-center text-center">
                                 <Card.Title as="h2" className="fw-bold">{mobil.merek}</Card.Title>
                                 <Card.Text className="text-muted" style={{ fontSize: '1.25rem' }}>
-                                    {mobil.seat} Kursi
+                                    {mobil.tipe} | {mobil.seat} Kursi
                                 </Card.Text>
                                 <hr/>
                                 <Card.Title as="h3" className="fw-bold text-danger mt-3">
@@ -145,17 +145,19 @@ export default function Sewa() {
                         <Table striped bordered hover className="shadow-sm">
                             <thead>
                                 <tr>
-                                    <th>Type</th>
+                                    <th>Merek</th>
+                                    <th>Tipe</th>
                                     <th>Harga</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
                                     <td>{mobil.merek}</td>
+                                    <td>{mobil.tipe}</td>
                                     <td>Rp {new Intl.NumberFormat('id-ID').format(mobil.harga)}</td>
                                 </tr>
                                 <tr>
-                                    <td colSpan="2" className="text-muted fst-italic">Harga dapat berubah sewaktu-waktu</td>
+                                    <td colSpan="3" className="text-muted fst-italic">Harga dapat berubah sewaktu-waktu</td>
                                 </tr>
                             </tbody>
                         </Table>

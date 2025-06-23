@@ -17,71 +17,24 @@ const WhatsAppFAB = lazy(() => import("../components/WhatsAppFAB"));
 export default function Home() {
   const navigate = useNavigate();
 
-  // const [welcomeMessage, setWelcomeMessage] = useState();
+  const [filterTipe, setFilterTipe] = useState('');
+  const [filterHarga, setFilterHarga] = useState('');
+
+  const handleSearch = () => {
+    const params = new URLSearchParams();
+
+    if (filterTipe) {
+      params.append('tipe', filterTipe);
+    }
+    if (filterHarga) {
+      params.append('harga', filterHarga);
+    }
+
+    navigate(`/mobil?${params.toString()}`);
+  };
 
   return (
     <div style={{ fontFamily: "Poppins" }}>
-      {/* <Navbar
-        expand="lg"
-        sticky="top"
-        className="py-3"
-        style={{
-          backgroundColor: "rgba(0, 0, 0, 0.9)",
-          zIndex: 1000,
-        }}
-      >
-        <Container fluid className="px-4">
-          <Navbar.Brand
-            onClick={() => navigate("/")}
-            style={{
-              cursor: "pointer",
-              fontWeight: "bold",
-              color: "white",
-              fontSize: "28px",
-              letterSpacing: "1px",
-            }}
-          >
-            Rental IQRA
-          </Navbar.Brand>
-
-          <Navbar.Toggle aria-controls="main-navbar-nav" className="bg-light" />
-
-          <Navbar.Collapse id="main-navbar-nav">
-            <Nav className="mx-auto my-2 my-lg-0">
-              <Nav.Link href="/" className="text-white fw-semibold mx-2">
-                Beranda
-              </Nav.Link>
-              <Nav.Link href="/mobil" className="text-white fw-semibold mx-2">
-                Cari Mobil
-              </Nav.Link>
-              <Nav.Link href="#layanan" className="text-white fw-semibold mx-2">
-                Layanan
-              </Nav.Link>
-              <Nav.Link href="#info" className="text-white fw-semibold mx-2">
-                Info
-              </Nav.Link>
-              <Nav.Link href="#lokasi" className="text-white fw-semibold mx-2">
-                Lokasi
-              </Nav.Link>
-            </Nav>
-
-            <div className="d-flex align-items-center">
-              <Button
-                href={`https://wa.me/6281341017966`}
-                style={{
-                  backgroundColor: "#dc3545",
-                  borderColor: "#dc3545",
-                  color: "#fff",
-                }}
-                className="d-flex align-items-center"
-              >
-                Kontak
-                <FaPhone className="m-2" />
-              </Button>
-            </div>
-          </Navbar.Collapse>
-        </Container>
-      </Navbar> */}
       <NavbarSection />
 
       <Suspense fallback={<div className="text-center py-5">Memuat konten...</div>}>
@@ -107,7 +60,13 @@ export default function Home() {
             </div>
           </div>
 
-          <SearchSection />
+          <SearchSection 
+            filterTipe={filterTipe}
+            setFilterTipe={setFilterTipe}
+            filterHarga={filterHarga}
+            setFilterHarga={setFilterHarga}
+            handleSearch={handleSearch}
+          />
         </div>
 
         <Suspense fallback={<div>Loading...</div>}>

@@ -34,7 +34,7 @@ export default function Top5MobilSection() {
           <p className="text-muted mx-auto" style={{ maxWidth: "700px" }}>
             Berikut adalah tiga mobil terpopuler yang paling sering disewa oleh
             pelanggan kami. Cocok untuk berbagai kebutuhan perjalanan Anda di
-            Bali, baik sendiri, bersama keluarga, atau rombongan kecil.
+            Palu, baik sendiri, bersama keluarga, atau rombongan kecil.
           </p>
         </div>
 

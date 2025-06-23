@@ -12,6 +12,7 @@ const Tabel = () => {
     const [editingMobil, setEditingMobil] = useState(null); 
 
     const API_URL = 'http://127.0.0.1:8000';
+    const token = localStorage.getItem('token');
 
     const fetchMobils = async () => {
         try {
@@ -47,6 +48,7 @@ const Tabel = () => {
     
     const schema = yup.object().shape({
         merek: yup.string().required("Merek wajib diisi"),
+        tipe: yup.string().required("Tipe mobil wajib dipilih"),
         seat: yup.number().required("Jumlah seat wajib diisi").positive().integer(),
         harga: yup.number().required("Harga wajib diisi").positive(),
         keterangan: yup.string().nullable(),
@@ -57,50 +59,54 @@ const Tabel = () => {
     });
 
     const handleFormSubmit = async (values, { setSubmitting, resetForm }) => {
-        const formData = new FormData();
+    const formData = new FormData();
+    
+    formData.append('merek', values.merek);
+    formData.append('tipe', values.tipe);
+    formData.append('seat', values.seat);
+    formData.append('harga', values.harga);
+    formData.append('keterangan', values.keterangan || '');
+
+    if (values.foto_depan) formData.append('foto_depan', values.foto_depan);
+    if (values.foto_belakang) formData.append('foto_belakang', values.foto_belakang);
+    if (values.foto_samping) formData.append('foto_samping', values.foto_samping);
+    if (values.foto_dalam) formData.append('foto_dalam', values.foto_dalam);
+
+    const isEditing = !!editingMobil;
+    const url = isEditing ? `${API_URL}/api/mobil/${editingMobil.id}` : `${API_URL}/api/mobil`;
+    
+    try {
+        const response = await axios.post(url, formData, {
+            headers: { 
+                'Content-Type': 'multipart/form-data',
+                'Authorization': `Bearer ${token}`
+            },
+        });
         
-        formData.append('merek', values.merek);
-        formData.append('seat', values.seat);
-        formData.append('harga', values.harga);
-        formData.append('keterangan', values.keterangan || '');
+        setNotification({ show: true, message: response.data.message, type: 'success' });
 
-        if (values.foto_depan) formData.append('foto_depan', values.foto_depan);
-        if (values.foto_belakang) formData.append('foto_belakang', values.foto_belakang);
-        if (values.foto_samping) formData.append('foto_samping', values.foto_samping);
-        if (values.foto_dalam) formData.append('foto_dalam', values.foto_dalam);
-
-        const isEditing = !!editingMobil;
-        const url = isEditing ? `${API_URL}/api/mobil/${editingMobil.id}` : `${API_URL}/api/mobil`;
-        
-        if(isEditing) formData.append('_method', 'PUT'); 
-
-        try {
-            const response = await axios.post(url, formData, {
-                headers: { 'Content-Type': 'multipart/form-data' },
-            });
-            
-            setNotification({ show: true, message: response.data.message, type: 'success' });
-
-            if (isEditing) {
-                setMobils(mobils.map(m => m.id === editingMobil.id ? response.data.data : m));
-            } else {
-                setMobils(currentMobils => [response.data.data, ...currentMobils]);
-            }
-            
-            resetForm();
-            handleCloseModal();
-        } catch (error) {
-            console.error('Error submitting form:', error.response ? error.response.data : error.message);
-            setNotification({ show: true, message: 'Gagal memproses data!', type: 'danger' });
-        } finally {
-            setSubmitting(false);
+        if (isEditing) {
+            setMobils(mobils.map(m => m.id === editingMobil.id ? response.data.data : m));
+        } else {
+            setMobils(currentMobils => [response.data.data, ...currentMobils]);
         }
-    };
+        
+        resetForm();
+        handleCloseModal();
+    } catch (error) {
+        console.error('Error submitting form:', error.response ? error.response.data : error.message);
+        setNotification({ show: true, message: 'Gagal memproses data!', type: 'danger' });
+    } finally {
+        setSubmitting(false);
+    }
+};
 
     const handleDelete = async (id) => {
         if (window.confirm('Apakah Anda yakin ingin menghapus data ini?')) {
             try {
-                await axios.delete(`${API_URL}/api/mobil/${id}`);
+                await axios.delete(`${API_URL}/api/mobil/${id}`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
                 setNotification({ show: true, message: 'Data berhasil dihapus!', type: 'success' });
                 setMobils(mobils.filter(mobil => mobil.id !== id));
             } catch (error) {
@@ -121,10 +127,19 @@ const Tabel = () => {
                         <Card.Body>
                             <Table striped bordered hover responsive>
                                 <thead>
-                                    <tr><th>#</th><th>Foto</th><th>Merek</th><th>Seat</th><th>Harga</th><th>Keterangan</th><th>Aksi</th></tr>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Foto</th>
+                                        <th>Merek</th>
+                                        <th>Tipe</th>
+                                        <th>Seat</th>
+                                        <th>Harga</th>
+                                        <th>Keterangan</th>
+                                        <th>Aksi</th>
+                                    </tr>
                                 </thead>
                                 <tbody>
-                                    {loading ? ( <tr><td colSpan="7" className="text-center">Loading...</td></tr>
+                                    {loading ? ( <tr><td colSpan="8" className="text-center">Loading...</td></tr>
                                     ) : mobils.length > 0 ? (
                                         mobils.map((mobil, index) => (
                                             <tr key={mobil.id}>
@@ -132,7 +147,9 @@ const Tabel = () => {
                                                 <td>
                                                     {mobil.foto_depan && (<img src={`${API_URL}/storage/mobil/${mobil.foto_depan}`} alt={mobil.merek} style={{ width: '100px', height: 'auto', borderRadius: '4px' }}/>)}
                                                 </td>
-                                                <td>{mobil.merek}</td><td>{mobil.seat}</td>
+                                                <td>{mobil.merek}</td>
+                                                <td>{mobil.tipe}</td>
+                                                <td>{mobil.seat}</td>
                                                 <td>Rp {new Intl.NumberFormat('id-ID').format(mobil.harga)}</td>
                                                 <td>{mobil.keterangan || '-'}</td>
                                                 <td>
@@ -141,7 +158,7 @@ const Tabel = () => {
                                                 </td>
                                             </tr>
                                         ))
-                                    ) : ( <tr><td colSpan="7" className="text-center">Belum ada data.</td></tr> )}
+                                    ) : ( <tr><td colSpan="8" className="text-center">Belum ada data.</td></tr> )}
                                 </tbody>
                             </Table>
                         </Card.Body>
@@ -155,8 +172,8 @@ const Tabel = () => {
                     onSubmit={handleFormSubmit}
                     initialValues={
                         editingMobil 
-                        ? { ...editingMobil, foto_depan: null, foto_belakang: null, foto_samping: null, foto_dalam: null } 
-                        : { merek: '', seat: '', harga: '', keterangan: '', foto_depan: null, foto_belakang: null, foto_samping: null, foto_dalam: null }
+                        ? { ...editingMobil, tipe: editingMobil.tipe || '', foto_depan: null, foto_belakang: null, foto_samping: null, foto_dalam: null } 
+                        : { merek: '', tipe: '', seat: '', harga: '', keterangan: '', foto_depan: null, foto_belakang: null, foto_samping: null, foto_dalam: null }
                     }
                     enableReinitialize
                 >
@@ -166,11 +183,27 @@ const Tabel = () => {
                                 <Modal.Title>{editingMobil ? 'Edit Data Mobil' : 'Tambah Data Mobil'}</Modal.Title>
                             </Modal.Header>
                             <Modal.Body>
-                                <Form.Group as={Col} md="12" controlId="validationFormikMerek" className="mb-3">
-                                    <Form.Label>Merek Mobil</Form.Label>
-                                    <Form.Control type="text" name="merek" value={values.merek} onChange={handleChange} isInvalid={!!errors.merek}/>
-                                    <Form.Control.Feedback type="invalid">{errors.merek}</Form.Control.Feedback>
-                                </Form.Group>
+                                <Row className="mb-3">
+                                    <Col md={6}>
+                                        <Form.Group controlId="validationFormikMerek">
+                                            <Form.Label>Merek Mobil</Form.Label>
+                                            <Form.Control type="text" name="merek" value={values.merek} onChange={handleChange} isInvalid={!!errors.merek}/>
+                                            <Form.Control.Feedback type="invalid">{errors.merek}</Form.Control.Feedback>
+                                        </Form.Group>
+                                    </Col>
+                                    <Col md={6}>
+                                        <Form.Group controlId="validationFormikTipe">
+                                            <Form.Label>Tipe Mobil</Form.Label>
+                                            <Form.Select name="tipe" value={values.tipe} onChange={handleChange} isInvalid={!!errors.tipe}>
+                                                <option value="">Pilih Tipe...</option>
+                                                <option value="SUV">SUV</option>
+                                                <option value="MPV">MPV</option>
+                                                <option value="City Car">City Car</option>
+                                            </Form.Select>
+                                            <Form.Control.Feedback type="invalid">{errors.tipe}</Form.Control.Feedback>
+                                        </Form.Group>
+                                    </Col>
+                                </Row>
                                 <Row className="mb-3">
                                     <Form.Group as={Col} md="6" controlId="validationFormikSeat">
                                         <Form.Label>Jumlah Seat</Form.Label>

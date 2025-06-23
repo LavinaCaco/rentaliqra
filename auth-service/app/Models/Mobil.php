@@ -13,6 +13,7 @@ class Mobil extends Model
 
      protected $fillable = [
         'merek',
+        'tipe',
         'seat',
         'harga',
         'keterangan',

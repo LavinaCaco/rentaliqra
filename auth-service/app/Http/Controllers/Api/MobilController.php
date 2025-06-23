@@ -7,12 +7,33 @@ use Illuminate\Http\Request;
 use App\Models\Mobil;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\Rule;
 
 class MobilController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $mobils = Mobil::latest()->get();
+        $query = Mobil::query();
+
+        if ($request->filled('tipe')) {
+            $query->where('tipe', $request->tipe);
+        }
+
+        if ($request->filled('harga')) {
+            switch ($request->harga) {
+                case '<300k':
+                    $query->where('harga', '<', 300000);
+                    break;
+                case '300k-500k':
+                    $query->whereBetween('harga', [300000, 500000]);
+                    break;
+                case '>500k':
+                    $query->where('harga', '>', 500000);
+                    break;
+            }
+        }
+        
+        $mobils = $query->latest()->get();
         return response()->json($mobils, 200);
     }
 
@@ -26,6 +47,7 @@ class MobilController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'merek' => 'required|string|max:255',
+            'tipe' => ['required', Rule::in(['SUV', 'MPV', 'City Car'])],
             'seat' => 'required|integer',
             'harga' => 'required|numeric',
             'keterangan' => 'nullable|string',
@@ -63,6 +85,7 @@ class MobilController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'merek' => 'required|string|max:255',
+            'tipe' => ['required', Rule::in(['SUV', 'MPV', 'City Car'])],
             'seat' => 'required|integer',
             'harga' => 'required|numeric',
             'keterangan' => 'nullable|string',
