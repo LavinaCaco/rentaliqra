@@ -11,8 +11,10 @@ import Users from './view/admin/users';
 import AdminLayout from "./layouts/AdminLayout"; 
 import Dashboard from "./view/admin/dashboard";
 import Tabel from "./view/admin/tabel";
-import ProtectedRoute from './components/ProtectedRoute';
+import ManajemenSewa from './view/admin/manajemensewa';
 
+import RiwayatPesanan from './view/riwayatpesanan';
+import ProtectedRoute from './components/ProtectedRoute';
 import ScrollToTop from "./components/ScrollToTop";
 import "./App.css";
 import { Table } from "react-bootstrap";
@@ -28,11 +30,21 @@ export default function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
 
-         <Route 
+        
+        <Route 
           path="/sewa/:id"
           element={
             <ProtectedRoute>
               <Sewa />
+            </ProtectedRoute>
+          } 
+        />
+
+        <Route 
+          path="/pesanan" 
+          element={
+            <ProtectedRoute>
+              <RiwayatPesanan />
             </ProtectedRoute>
           } 
         />
@@ -42,6 +54,7 @@ export default function App() {
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="users" element={<Users />} />
           <Route path="tabel" element={<Tabel />} />
+          <Route path="sewa" element={<ManajemenSewa />} />
 
           
           <Route index element={<Navigate to="dashboard" replace />} />

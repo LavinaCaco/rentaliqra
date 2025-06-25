@@ -1,5 +1,5 @@
 import React, { Suspense, lazy, useState, useEffect } from "react";
-import { Container, Row, Col, Card, Button, Spinner, Modal } from "react-bootstrap";
+import { Container, Row, Col, Card, Button, Spinner, Modal, Badge } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { useNavigate } from "react-router-dom";
 import axios from 'axios';
@@ -84,7 +84,14 @@ export default function Mobil() {
                     ) : mobils.length > 0 ? (
                         mobils.map((mobil) => (
                             <Col md={4} key={mobil.id}>
-                                <Card className="h-100 shadow-sm">
+                                <Card className="h-100 shadow-sm position-relative">
+                                    <Badge 
+                                        bg={mobil.status === 'ready' ? 'success' : 'warning'}
+                                        className="position-absolute top-0 end-0 m-2 p-2 text-capitalize"
+                                        style={{ zIndex: 1 }}
+                                    >
+                                        {mobil.status}
+                                    </Badge>
                                     <Card.Img
                                         variant="top"
                                         src={`${API_URL}/storage/mobil/${mobil.foto_depan}`}
@@ -97,8 +104,13 @@ export default function Mobil() {
                                         <Card.Text>{mobil.merek}</Card.Text>
                                     </Card.Body>
                                     <Card.Footer className="border-0 bg-white">
-                                        <Button variant="dark" className="w-100" onClick={() => handleSewaClick(mobil.id)}>
-                                            Sewa
+                                        <Button 
+                                            variant="dark" 
+                                            className="w-100" 
+                                            onClick={() => handleSewaClick(mobil.id)}
+                                            disabled={mobil.status !== 'ready'}
+                                        >
+                                            {mobil.status === 'ready' ? 'Sewa' : 'Disewa'}
                                         </Button>
                                     </Card.Footer>
                                 </Card>

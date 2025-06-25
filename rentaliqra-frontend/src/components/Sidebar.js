@@ -1,14 +1,16 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Nav } from 'react-bootstrap';
-import { BsGrid, BsPerson, BsTable } from 'react-icons/bs'; 
+import { BsGrid, BsKey, BsCarFront, BsPeople } from 'react-icons/bs'; 
 
 const Sidebar = () => {
   const location = useLocation();
+  
   const navItems = [
     { path: '/admin/dashboard', icon: <BsGrid />, name: 'Dashboard' },
-    { path: '/admin/tabel', icon: <BsTable />, name: 'Table List' },
-    { path: '/admin/users', icon: <BsPerson />, name: 'Users' },
+    { path: '/admin/tabel', icon: <BsCarFront />, name: 'Manajemen Mobil' },
+    { path: '/admin/users', icon: <BsPeople />, name: 'Manajemen User' },
+    { path: '/admin/sewa', icon: <BsKey />, name: 'Manajemen Sewa' },
   ];
 
   return (
@@ -20,7 +22,7 @@ const Sidebar = () => {
       </div>
       <Nav as="ul" className="flex-column">
         {navItems.map((item, index) => (
-          <Nav.Item as="li" key={index} className={location.pathname === item.path ? 'active' : ''}>
+          <Nav.Item as="li" key={index} className={location.pathname.startsWith(item.path) ? 'active' : ''}>
             <Nav.Link as={Link} to={item.path}>
               {item.icon}
               <p>{item.name}</p>

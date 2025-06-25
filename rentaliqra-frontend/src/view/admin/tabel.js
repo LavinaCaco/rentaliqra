@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Row, Col, Card, Button, Modal, Form, Alert, Table, Spinner } from 'react-bootstrap';
+import { Container, Row, Col, Card, Button, Modal, Form, Alert, Table, Spinner, Badge } from 'react-bootstrap';
 import { Formik } from 'formik';
 import * as yup from 'yup';
 import axios from 'axios';
@@ -59,47 +59,46 @@ const Tabel = () => {
     });
 
     const handleFormSubmit = async (values, { setSubmitting, resetForm }) => {
-    const formData = new FormData();
-    
-    formData.append('merek', values.merek);
-    formData.append('tipe', values.tipe);
-    formData.append('seat', values.seat);
-    formData.append('harga', values.harga);
-    formData.append('keterangan', values.keterangan || '');
-
-    if (values.foto_depan) formData.append('foto_depan', values.foto_depan);
-    if (values.foto_belakang) formData.append('foto_belakang', values.foto_belakang);
-    if (values.foto_samping) formData.append('foto_samping', values.foto_samping);
-    if (values.foto_dalam) formData.append('foto_dalam', values.foto_dalam);
-
-    const isEditing = !!editingMobil;
-    const url = isEditing ? `${API_URL}/api/mobil/${editingMobil.id}` : `${API_URL}/api/mobil`;
-    
-    try {
-        const response = await axios.post(url, formData, {
-            headers: { 
-                'Content-Type': 'multipart/form-data',
-                'Authorization': `Bearer ${token}`
-            },
-        });
+        const formData = new FormData();
         
-        setNotification({ show: true, message: response.data.message, type: 'success' });
+        formData.append('merek', values.merek);
+        formData.append('tipe', values.tipe);
+        formData.append('seat', values.seat);
+        formData.append('harga', values.harga);
+        formData.append('keterangan', values.keterangan || '');
 
-        if (isEditing) {
-            setMobils(mobils.map(m => m.id === editingMobil.id ? response.data.data : m));
-        } else {
-            setMobils(currentMobils => [response.data.data, ...currentMobils]);
+        if (values.foto_depan) formData.append('foto_depan', values.foto_depan);
+        if (values.foto_belakang) formData.append('foto_belakang', values.foto_belakang);
+        if (values.foto_samping) formData.append('foto_samping', values.foto_samping);
+        if (values.foto_dalam) formData.append('foto_dalam', values.foto_dalam);
+
+        const isEditing = !!editingMobil;
+        const url = isEditing ? `${API_URL}/api/mobil/${editingMobil.id}` : `${API_URL}/api/mobil`;
+        
+        if(isEditing) formData.append('_method', 'PUT'); 
+
+        try {
+            const response = await axios.post(url, formData, {
+                headers: { 'Content-Type': 'multipart/form-data', 'Authorization': `Bearer ${token}` },
+            });
+            
+            setNotification({ show: true, message: response.data.message, type: 'success' });
+
+            if (isEditing) {
+                setMobils(mobils.map(m => m.id === editingMobil.id ? response.data.data : m));
+            } else {
+                setMobils(currentMobils => [response.data.data, ...currentMobils]);
+            }
+            
+            resetForm();
+            handleCloseModal();
+        } catch (error) {
+            console.error('Error submitting form:', error.response ? error.response.data : error.message);
+            setNotification({ show: true, message: 'Gagal memproses data!', type: 'danger' });
+        } finally {
+            setSubmitting(false);
         }
-        
-        resetForm();
-        handleCloseModal();
-    } catch (error) {
-        console.error('Error submitting form:', error.response ? error.response.data : error.message);
-        setNotification({ show: true, message: 'Gagal memproses data!', type: 'danger' });
-    } finally {
-        setSubmitting(false);
-    }
-};
+    };
 
     const handleDelete = async (id) => {
         if (window.confirm('Apakah Anda yakin ingin menghapus data ini?')) {
@@ -128,10 +127,11 @@ const Tabel = () => {
                             <Table striped bordered hover responsive>
                                 <thead>
                                     <tr>
-                                        <th>#</th>
+                                        <th>No</th>
                                         <th>Foto</th>
                                         <th>Merek</th>
                                         <th>Tipe</th>
+                                        <th>Status</th>
                                         <th>Seat</th>
                                         <th>Harga</th>
                                         <th>Keterangan</th>
@@ -139,7 +139,7 @@ const Tabel = () => {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {loading ? ( <tr><td colSpan="8" className="text-center">Loading...</td></tr>
+                                    {loading ? ( <tr><td colSpan="9" className="text-center">Loading...</td></tr>
                                     ) : mobils.length > 0 ? (
                                         mobils.map((mobil, index) => (
                                             <tr key={mobil.id}>
@@ -149,6 +149,11 @@ const Tabel = () => {
                                                 </td>
                                                 <td>{mobil.merek}</td>
                                                 <td>{mobil.tipe}</td>
+                                                <td>
+                                                    <Badge bg={mobil.status === 'ready' ? 'success' : 'warning'} className="text-capitalize">
+                                                        {mobil.status}
+                                                    </Badge>
+                                                </td>
                                                 <td>{mobil.seat}</td>
                                                 <td>Rp {new Intl.NumberFormat('id-ID').format(mobil.harga)}</td>
                                                 <td>{mobil.keterangan || '-'}</td>
@@ -158,7 +163,7 @@ const Tabel = () => {
                                                 </td>
                                             </tr>
                                         ))
-                                    ) : ( <tr><td colSpan="8" className="text-center">Belum ada data.</td></tr> )}
+                                    ) : ( <tr><td colSpan="9" className="text-center">Belum ada data.</td></tr> )}
                                 </tbody>
                             </Table>
                         </Card.Body>

@@ -11,9 +11,15 @@ class Mobil extends Model
 
     protected $table = 'mobil';
 
-     protected $fillable = [
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
+    protected $fillable = [
         'merek',
         'tipe',
+        'status',
         'seat',
         'harga',
         'keterangan',
@@ -22,4 +28,9 @@ class Mobil extends Model
         'foto_samping',
         'foto_dalam',
     ];
+
+    public function sewa()
+    {
+        return $this->hasMany(Sewa::class);
+    }
 }

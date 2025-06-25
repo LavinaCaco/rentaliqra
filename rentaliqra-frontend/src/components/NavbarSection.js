@@ -50,7 +50,6 @@ export default function NavbarSection() {
         <Navbar.Toggle aria-controls="main-navbar-nav" className="bg-light" />
 
         <Navbar.Collapse id="main-navbar-nav">
-          {/* Nav Links */}
           <Nav className="mx-auto my-2 my-lg-0">
             <Nav.Link href="/" className="text-white fw-semibold mx-2">
               Beranda
@@ -79,11 +78,15 @@ export default function NavbarSection() {
                 {user.first_name} {user.last_name}
               </Dropdown.Toggle>
 
-              <Dropdown.Menu align="end">
-                <Dropdown.Item onClick={handleLogout}>
-                  Logout
-                </Dropdown.Item>
-              </Dropdown.Menu>
+               <Dropdown.Menu align="end">
+                  <Dropdown.Item onClick={() => navigate('/pesanan')}>
+                    Pesanan Saya
+                  </Dropdown.Item>
+                  <Dropdown.Divider />
+                  <Dropdown.Item onClick={handleLogout}>
+                    Logout
+                  </Dropdown.Item>
+                </Dropdown.Menu>
             </Dropdown>
           ) : (
             <Button

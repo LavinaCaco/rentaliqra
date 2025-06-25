@@ -75,6 +75,8 @@ class MobilController extends Controller
         
         $mobil = Mobil::create($data);
 
+        $mobil->refresh();
+
         return response()->json([
             'message' => 'Data mobil berhasil ditambahkan!',
             'data' => $mobil
@@ -115,6 +117,9 @@ class MobilController extends Controller
         }
 
         $mobil->update($updateData);
+
+
+        $mobil->refresh();
 
         return response()->json([
             'message' => 'Data mobil berhasil diperbarui!',
