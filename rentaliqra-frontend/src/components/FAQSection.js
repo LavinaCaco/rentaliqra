@@ -35,9 +35,9 @@ export default function FAQAndTermsSection() {
                 mobil, maksimal extra time adalah 3 jam.
               </li>
               <li>
-                Gratis biaya antar dan pengemPaluan mobil jika sewa 4 hari atau
-                lebih, di airport, Denpasar, Sanur, Kuta, Legian, Kerobokan,
-                Seminyak dan sekitarnya. Jika di luar area tersebut, ada biaya
+                Gratis biaya antar dan pengembalian mobil jika sewa 4 hari atau
+                lebih, di airport, Kepulauan Togean, Danau Poso, Lembah Bada, Pantai Tanjung Karang
+                dan sekitarnya. Jika di luar area tersebut, ada biaya
                 tambahan menyesuaikan jarak.
               </li>
               <li>
@@ -47,7 +47,7 @@ export default function FAQAndTermsSection() {
                 kaca pecah akan dikenakan biaya perbaikan dan kompensasi (maks.
                 10 hari sewa).
               </li>
-              <li>Sewa mobil hanya boleh digunakan di wilayah Palu saja.</li>
+              <li>Sewa mobil hanya boleh digunakan di wilayah Sulawesi saja.</li>
               <li>
                 Tidak diperkenankan menggunakan mobil sewaan untuk balapan,
                 segala bentuk kejahatan, atau aktivitas berisiko tinggi.

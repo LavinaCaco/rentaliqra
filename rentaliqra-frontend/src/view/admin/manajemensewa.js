@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Card, Button, Table, Spinner, Alert, Badge } from 'react-bootstrap';
 import axios from 'axios';
+import { FaCheck } from 'react-icons/fa';
 
 const ManajemenSewa = () => {
     const [sewaList, setSewaList] = useState([]);
@@ -89,9 +90,15 @@ const ManajemenSewa = () => {
                                                 </Badge>
                                             </td>
                                             <td>
+                                                {/* --- PERBAIKAN LOGIKA DI SINI --- */}
                                                 {sewa.status === 'disewa' && (
                                                     <Button variant="success" size="sm" onClick={() => handleSelesaikan(sewa.id)}>
                                                         Selesaikan
+                                                    </Button>
+                                                )}
+                                                {sewa.status === 'selesai' && (
+                                                    <Button variant="outline-secondary" size="sm" disabled>
+                                                        <FaCheck /> Selesai
                                                     </Button>
                                                 )}
                                             </td>

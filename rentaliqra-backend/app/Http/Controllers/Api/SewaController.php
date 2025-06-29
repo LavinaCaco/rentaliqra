@@ -63,7 +63,8 @@ class SewaController extends Controller
 
         $riwayatSewa = Sewa::with([
                                 'user:id,first_name,last_name', 
-                                'mobil:id,merek,tipe'
+                                'mobil:id,merek,tipe',
+                                'review'
                             ])
                             ->where('user_id', $userId)
                             ->latest()

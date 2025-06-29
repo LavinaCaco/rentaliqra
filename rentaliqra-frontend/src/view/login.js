@@ -1,4 +1,4 @@
-import React, { useState, lazy } from "react";
+import React, { useState, lazy, Suspense } from "react";
 import { Form, Button, Container, Alert } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 
@@ -35,7 +35,6 @@ export default function Login() {
     const destination = redirect.startsWith('/') ? redirect : `/${redirect}`;
     navigate(destination);
 
-    // Redirect berdasarkan level user (dikirim dari backend via "redirect")
     navigate(redirect);
   } catch (error) {
     const msg =
@@ -46,49 +45,53 @@ export default function Login() {
 
 
   return (
-    <div style={{ fontFamily: "Poppins" }}>
-      <NavbarSection />
+    <div style={{ fontFamily :'Poppins', display: 'flex', flexDirection: 'column', minHeight: '100vh', backgroundColor: '#f8f7f4' }}>
+      <Suspense fallback={<div>Loading...</div>}>
+        <NavbarSection />
+      </Suspense>
 
-      <Container style={{ maxWidth: 480, marginTop: 80 }} className="mb-5">
-        <h2 className="mb-4 text-center">Masuk Akun</h2>
+      <main style={{ flex: '1 0 auto' }}>
+        <Container style={{ maxWidth: 480, marginTop: 80 }} className="mb-5">
+          <h2 className="mb-4 text-center">Masuk Akun</h2>
 
-        {message && <Alert variant={message.type}>{message.text}</Alert>}
+          {message && <Alert variant={message.type}>{message.text}</Alert>}
 
-        <Form onSubmit={handleSubmit}>
-          <Form.Group className="mb-3">
-            <Form.Label>Email</Form.Label>
-            <Form.Control
-              type="email"
-              name="email"
-              required
-              value={form.email}
-              onChange={handleChange}
-            />
-          </Form.Group>
+          <Form onSubmit={handleSubmit}>
+            <Form.Group className="mb-3">
+              <Form.Label>Email</Form.Label>
+              <Form.Control
+                type="email"
+                name="email"
+                required
+                value={form.email}
+                onChange={handleChange}
+              />
+            </Form.Group>
 
-          <Form.Group className="mb-4">
-            <Form.Label>Password</Form.Label>
-            <Form.Control
-              type="password"
-              name="password"
-              required
-              value={form.password}
-              onChange={handleChange}
-            />
-          </Form.Group>
+            <Form.Group className="mb-4">
+              <Form.Label>Password</Form.Label>
+              <Form.Control
+                type="password"
+                name="password"
+                required
+                value={form.password}
+                onChange={handleChange}
+              />
+            </Form.Group>
 
-          <Button type="submit" variant="primary" className="w-100">
-            Login
-          </Button>
+            <Button type="submit" variant="primary" className="w-100">
+              Login
+            </Button>
 
-          <div className="text-center mt-3">
-            <span>Belum punya akun? </span>
-            <a href="#" onClick={() => navigate("/register")}>
-              Daftar di sini
-            </a>
-          </div>
-        </Form>
-      </Container>
+            <div className="text-center mt-3">
+              <span>Belum punya akun? </span>
+              <a href="#" onClick={() => navigate("/register")}>
+                Daftar di sini
+              </a>
+            </div>
+          </Form>
+        </Container>
+      </main>
 
       <WhatsAppFAB />
       <FooterSection />

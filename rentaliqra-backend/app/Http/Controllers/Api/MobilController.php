@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 
+
 class MobilController extends Controller
 {
     public function index(Request $request)
@@ -39,6 +40,11 @@ class MobilController extends Controller
 
     public function show(Mobil $mobil)
     {
+        $mobil->load(['reviews' => function ($query)
+        {
+        $query->with('user:id,first_name,last_name')->latest();
+        }]);
+
         return response()->json($mobil, 200);
     }
 

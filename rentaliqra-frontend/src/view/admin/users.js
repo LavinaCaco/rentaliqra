@@ -110,7 +110,13 @@ const Users = () => {
     const UserTable = ({ data, userType, onEdit, onDelete }) => (
         <Table striped bordered hover responsive>
             <thead>
-                <tr><th>#</th><th>Nama Depan</th><th>Nama Belakang</th><th>Email</th><th>Aksi</th></tr>
+                <tr>
+                    <th>No</th>
+                    <th>Nama Depan</th>
+                    <th>Nama Belakang</th>
+                    <th>Email</th>
+                    <th>Aksi</th>
+                </tr>
             </thead>
             <tbody>
                 {data.length > 0 ? (
@@ -218,7 +224,13 @@ const Users = () => {
 const UserTable = ({ data, userType, onEdit, onDelete }) => (
     <Table striped bordered hover responsive>
         <thead>
-            <tr><th>#</th><th>Nama Depan</th><th>Nama Belakang</th><th>Email</th><th>Aksi</th></tr>
+            <tr>
+                <th>#</th>
+                <th>Nama Depan</th>
+                <th>Nama Belakang</th>
+                <th>Email</th>
+                <th>Aksi</th>
+            </tr>
         </thead>
         <tbody>
             {data.length > 0 ? (

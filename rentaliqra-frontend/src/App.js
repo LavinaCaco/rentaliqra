@@ -7,6 +7,7 @@ import Sewa from "./view/sewa";
 import Login from "./view/login";
 import Register from "./view/register";
 import Users from './view/admin/users'; 
+import Ulasan from './view/ulasan';
 
 import AdminLayout from "./layouts/AdminLayout"; 
 import Dashboard from "./view/admin/dashboard";
@@ -26,6 +27,7 @@ export default function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/mobil" element={<Mobil />} />
+        <Route path="/ulasan" element={<Ulasan />} />
         <Route path="/sewa/:id" element={<Sewa />} />
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Review; 
 
 class Mobil extends Model
 {
@@ -32,5 +33,10 @@ class Mobil extends Model
     public function sewa()
     {
         return $this->hasMany(Sewa::class);
+    }
+
+    public function reviews()
+    {
+        return $this->hasMany(Review::class)->latest();
     }
 }

@@ -57,6 +57,9 @@ export default function NavbarSection() {
             <Nav.Link href="/mobil" className="text-white fw-semibold mx-2">
               Cari Mobil
             </Nav.Link>
+            <Nav.Link href="/ulasan" className="text-white fw-semibold mx-2">
+            Ulasan
+            </Nav.Link> 
             <Nav.Link href="#layanan" className="text-white fw-semibold mx-2">
               Layanan
             </Nav.Link>

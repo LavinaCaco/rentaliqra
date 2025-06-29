@@ -369,7 +369,7 @@ export default function Sewa() {
                                                     <span>Estimasi Total Harga:</span>
                                                     <span>Rp {new Intl.NumberFormat('id-ID').format(values.total_harga || 0)}</span>
                                                 </div>
-                                                <p className='text-muted mt-2 mb-0' style={{fontSize: '0.8rem'}}>(Total biaya final akan dikonfirmasi oleh admin via WhatsApp)</p>
+                                                <p className='text-muted mt-2 mb-0' style={{fontSize: '0.8rem'}}>(Jika ada kerusakan pada mobil, penyewa harus membayar perbaikan kerusakan pada mobil sewaan )</p>
                                             </div>
                                         </Col>
                                     </Row>
@@ -378,7 +378,7 @@ export default function Sewa() {
                                 <Modal.Footer>
                                     <Button variant="secondary" onClick={handleCloseSewaModal}>Batal</Button>
                                     <Button type="submit" variant="primary" disabled={isSubmitting}>
-                                        {isSubmitting ? 'Memproses...' : 'Kirim Permintaan Sewa'}
+                                        {isSubmitting ? 'Memproses...' : 'Sewa'}
                                     </Button>
                                 </Modal.Footer>
                             </Form>

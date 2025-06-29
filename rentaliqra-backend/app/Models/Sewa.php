@@ -28,4 +28,9 @@ class Sewa extends Model
     {
         return $this->belongsTo(Mobil::class);
     }
+
+    public function review() 
+    {
+    return $this->hasOne(Review::class);
+    }
 }
