@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\MobilController;
 use App\Http\Controllers\Api\SewaController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\ReviewController;
+use App\Http\Controllers\Api\DashboardController;
 
 /*
 |--------------------------------------------------------------------------
@@ -36,6 +37,9 @@ Route::middleware('auth:sanctum')->group(function () {
 
 // RUTE ADMIN 
 Route::middleware(['auth:sanctum', 'is_admin'])->group(function () {
+
+    Route::get('/dashboard/stats', [DashboardController::class, 'getStats']);
+
     // manajemen user
     Route::post('/users', [UserController::class, 'addadmin']);
     Route::apiResource('/users', UserController::class)->except(['store']);
