@@ -4,26 +4,35 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Sewa;
+use App\Models\Mobil;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use Carbon\Carbon; 
+use Illuminate\Validation\Rule; 
 
 class SewaController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $sewa = Sewa::with(['user:id,first_name,last_name', 'mobil:id,merek,tipe'])
-                    ->latest()
-                    ->get();
-        return response()->json($sewa);
-    }
+        $query = Sewa::query();
 
+        $query->with(['user:id,first_name,last_name', 'mobil:id,merek,tipe']);
+
+        $query->latest();
+
+        $perPage = $request->input('per_page', 6);
+
+        $sewaList = $query->paginate($perPage);
+
+        return response()->json($sewaList, 200);
+    }
 
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'mobil_id' => 'required|exists:mobil,id',
-            'tanggal_mulai' => 'required|date',
+            'tanggal_mulai' => 'required|date|after_or_equal:today',
             'tanggal_kembali' => 'required|date|after_or_equal:tanggal_mulai',
         ]);
 
@@ -31,29 +40,73 @@ class SewaController extends Controller
             return response()->json($validator->errors(), 422);
         }
 
-        $mobil = \App\Models\Mobil::find($request->mobil_id);
+        $mobil = Mobil::find($request->mobil_id);
 
-        if ($mobil->status !== 'ready') {
+        if (!$mobil || $mobil->status !== 'ready') {
             return response()->json(['message' => 'Mobil ini sedang tidak tersedia untuk disewa.'], 409);
         }
 
         $sewa = null;
+
         DB::transaction(function () use ($request, $mobil, &$sewa) {
+            $tanggalMulai = Carbon::parse($request->tanggal_mulai);
+            $tanggalKembali = Carbon::parse($request->tanggal_kembali);
+            $jumlahHari = $tanggalMulai->diffInDays($tanggalKembali) + 1; 
+            
+            $totalHarga = $jumlahHari * $mobil->harga; 
+
             $sewa = Sewa::create([
                 'user_id' => auth()->id(),
                 'mobil_id' => $mobil->id,
                 'tanggal_sewa' => $request->tanggal_mulai,
                 'tanggal_kembali' => $request->tanggal_kembali,
-                'status' => 'disewa'
+                'total_harga' => $totalHarga, 
+                'status' => 'pending'
             ]);
+
             $mobil->update(['status' => 'disewa']);
             $sewa->load('user', 'mobil');
         });
 
         return response()->json([
-            'message' => 'Mobil berhasil disewa! Silakan hubungi admin untuk proses lebih lanjut.',
+            'message' => 'Permintaan sewa berhasil diajukan! Menunggu konfirmasi admin.',
             'data' => $sewa
         ], 201);
+    }
+
+
+    public function updateStatus(Request $request, Sewa $sewa)
+    {
+        $validator = Validator::make($request->all(), [
+            'status' => ['required', Rule::in(['pending', 'approved', 'completed', 'cancelled'])],
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 422);
+        }
+
+        DB::transaction(function () use ($request, $sewa) {
+            $oldStatus = $sewa->status;
+            $newStatus = $request->status;
+
+            $sewa->status = $newStatus;
+            
+            if ($newStatus === 'completed' && !$sewa->tanggal_kembali_aktual) {
+                $sewa->tanggal_kembali_aktual = now();
+            }
+            $sewa->save();
+
+            $mobil = Mobil::find($sewa->mobil_id);
+            if ($mobil) {
+                if ($newStatus === 'completed' || $newStatus === 'cancelled') {
+                    $mobil->update(['status' => 'ready']);
+                } elseif ($newStatus === 'approved' && $oldStatus === 'pending') {
+                    $mobil->update(['status' => 'disewa']);
+                }
+            }
+        });
+
+        return response()->json(['message' => 'Status sewa berhasil diperbarui!', 'data' => $sewa->load('user', 'mobil')], 200);
     }
 
 
@@ -71,23 +124,5 @@ class SewaController extends Controller
                             ->get();
 
         return response()->json($riwayatSewa);
-    }
-
-
-    public function complete(Sewa $sewa)
-    {
-        if ($sewa->status === 'selesai') {
-            return response()->json(['message' => 'Penyewaan ini sudah selesai.'], 409);
-        }
-
-        DB::transaction(function () use ($sewa) {
-            $sewa->update([
-                'status' => 'selesai',
-                'tanggal_kembali' => now()
-            ]);
-            $sewa->mobil->update(['status' => 'ready']);
-        });
-
-        return response()->json(['message' => 'Penyewaan berhasil diselesaikan. Mobil kini tersedia kembali.']);
     }
 }

@@ -9,14 +9,16 @@ class Sewa extends Model
 {
     use HasFactory;
 
-    protected $table = 'sewa';
+    protected $table = 'sewa'; 
 
     protected $fillable = [
         'user_id',
         'mobil_id',
         'tanggal_sewa',
         'tanggal_kembali',
+        'total_harga', 
         'status',
+        'tanggal_kembali_aktual', 
     ];
 
     public function user()
@@ -29,8 +31,8 @@ class Sewa extends Model
         return $this->belongsTo(Mobil::class);
     }
 
-    public function review() 
+    public function review()
     {
-    return $this->hasOne(Review::class);
+        return $this->hasOne(Review::class);
     }
 }

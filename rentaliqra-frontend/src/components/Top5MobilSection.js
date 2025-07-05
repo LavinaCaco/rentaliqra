@@ -4,7 +4,7 @@ import { Container, Row, Col, Card, Button } from "react-bootstrap";
 const carList = [
   {
     name: "Honda Brio",
-    image: "/assets/mobil3.webp",
+    image: "/assets/mobil5.webp",
     matic: 275000,
     manual: 250000,
     capacity: 4,
@@ -18,7 +18,7 @@ const carList = [
   },
   {
     name: "Xpander",
-    image: "/assets/mobil3.webp",
+    image: "/assets/mobil6.webp",
     matic: 350000,
     manual: 300000,
     capacity: 6,

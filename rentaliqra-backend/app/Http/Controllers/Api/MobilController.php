@@ -34,7 +34,10 @@ class MobilController extends Controller
             }
         }
         
-        $mobils = $query->latest()->get();
+        $perPage = $request->input('per_page', 9);
+
+        $mobils = $query->latest()->paginate($perPage);
+
         return response()->json($mobils, 200);
     }
 

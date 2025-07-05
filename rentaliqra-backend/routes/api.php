@@ -30,6 +30,7 @@ Route::middleware('auth:sanctum')->group(function () {
     
     Route::post('/sewa', [SewaController::class, 'store']);
     Route::get('/pesanan-saya', [SewaController::class, 'riwayat']);
+    Route::get('/riwayat', [SewaController::class, 'riwayat'])->middleware('auth:sanctum');
 
     Route::post('/sewa/{sewa}/reviews', [ReviewController::class, 'store']);
 });
@@ -51,5 +52,5 @@ Route::middleware(['auth:sanctum', 'is_admin'])->group(function () {
     
     // manajemen sewa
     Route::get('/sewa', [SewaController::class, 'index']);
-    Route::post('/sewa/{sewa}/complete', [SewaController::class, 'complete']);
+    Route::put('/sewa/{sewa}/status', [SewaController::class, 'updateStatus'])->middleware('auth:sanctum');
 });

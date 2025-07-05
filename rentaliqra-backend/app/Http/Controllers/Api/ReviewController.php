@@ -13,8 +13,8 @@ class ReviewController extends Controller
     public function index()
     {
         $reviews = Review::with(['user:id,first_name,last_name', 'mobil:id,merek,tipe'])
-                    ->latest()
-                    ->get();
+                         ->latest()
+                         ->get();
 
         return response()->json($reviews);
     }
@@ -25,9 +25,11 @@ class ReviewController extends Controller
         if ($sewa->user_id !== auth()->id()) {
             return response()->json(['message' => 'Anda tidak diizinkan mereview penyewaan ini.'], 403);
         }
-        if ($sewa->status !== 'selesai') {
+
+        if ($sewa->status !== 'completed' && $sewa->status !== 'selesai') {
             return response()->json(['message' => 'Anda hanya bisa mereview penyewaan yang sudah selesai.'], 403);
         }
+
         if ($sewa->review) {
             return response()->json(['message' => 'Anda sudah pernah memberikan review untuk penyewaan ini.'], 409);
         }

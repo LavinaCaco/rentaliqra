@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Container, Row, Col, Card, Button, Modal, Form, Alert, Table, Spinner, Badge } from 'react-bootstrap';
+import React, { useState, useEffect, useCallback } from 'react';
+import { Container, Row, Col, Card, Button, Modal, Form, Alert, Table, Spinner, Badge, Pagination } from 'react-bootstrap'; 
 import { Formik } from 'formik';
 import * as yup from 'yup';
 import axios from 'axios';
@@ -9,27 +9,51 @@ const Tabel = () => {
     const [loading, setLoading] = useState(true);
     const [showModal, setShowModal] = useState(false);
     const [notification, setNotification] = useState({ show: false, message: '', type: '' });
-    const [editingMobil, setEditingMobil] = useState(null); 
+    const [editingMobil, setEditingMobil] = useState(null);
+
+    const [currentPage, setCurrentPage] = useState(1);
+    const [lastPage, setLastPage] = useState(1);
+    const [totalItems, setTotalItems] = useState(0);
+    const itemsPerPage = 6; 
 
     const API_URL = 'http://127.0.0.1:8000';
     const token = localStorage.getItem('token');
 
-    const fetchMobils = async () => {
+    const fetchMobils = useCallback(async () => {
         try {
             setLoading(true);
-            const response = await axios.get(`${API_URL}/api/mobil`);
-            setMobils(response.data);
+            const response = await axios.get(`${API_URL}/api/mobil`, {
+                params: {
+                    page: currentPage,
+                    per_page: itemsPerPage 
+                },
+                headers: { 
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+
+            if (response.data && Array.isArray(response.data.data)) {
+                setMobils(response.data.data);
+                setCurrentPage(response.data.current_page || 1);
+                setLastPage(response.data.last_page || 1);
+                setTotalItems(response.data.total || 0);
+            } else {
+                console.error("Struktur respons API mobil untuk admin tidak sesuai:", response.data);
+                setMobils([]);
+                setNotification({ show: true, message: 'Gagal memuat data mobil dari server. Format data tidak sesuai.', type: 'danger' });
+            }
         } catch (error) {
-            console.error("Gagal mengambil data mobil:", error);
-            setNotification({ show: true, message: 'Gagal mengambil data dari server.', type: 'danger' });
+            console.error("Gagal mengambil data mobil:", error.response ? error.response.data : error.message);
+            setMobils([]); 
+            setNotification({ show: true, message: 'Gagal mengambil data mobil dari server.', type: 'danger' });
         } finally {
             setLoading(false);
         }
-    };
+    }, [API_URL, currentPage, itemsPerPage, token]); 
 
     useEffect(() => {
         fetchMobils();
-    }, []);
+    }, [fetchMobils]);
 
     const handleCloseModal = () => {
         setEditingMobil(null);
@@ -40,12 +64,12 @@ const Tabel = () => {
         setEditingMobil(null);
         setShowModal(true);
     };
-    
+
     const handleShowEditModal = (mobil) => {
         setEditingMobil(mobil);
         setShowModal(true);
     };
-    
+
     const schema = yup.object().shape({
         merek: yup.string().required("Merek wajib diisi"),
         tipe: yup.string().required("Tipe mobil wajib dipilih"),
@@ -60,7 +84,7 @@ const Tabel = () => {
 
     const handleFormSubmit = async (values, { setSubmitting, resetForm }) => {
         const formData = new FormData();
-        
+
         formData.append('merek', values.merek);
         formData.append('tipe', values.tipe);
         formData.append('seat', values.seat);
@@ -74,22 +98,18 @@ const Tabel = () => {
 
         const isEditing = !!editingMobil;
         const url = isEditing ? `${API_URL}/api/mobil/${editingMobil.id}` : `${API_URL}/api/mobil`;
-        
-        if(isEditing) formData.append('_method', 'PUT'); 
+
+        if (isEditing) formData.append('_method', 'PUT');
 
         try {
-            const response = await axios.post(url, formData, {
+            const response = await axios.post(url, formData, { 
                 headers: { 'Content-Type': 'multipart/form-data', 'Authorization': `Bearer ${token}` },
             });
-            
+
             setNotification({ show: true, message: response.data.message, type: 'success' });
 
-            if (isEditing) {
-                setMobils(mobils.map(m => m.id === editingMobil.id ? response.data.data : m));
-            } else {
-                setMobils(currentMobils => [response.data.data, ...currentMobils]);
-            }
-            
+            fetchMobils();
+
             resetForm();
             handleCloseModal();
         } catch (error) {
@@ -107,18 +127,34 @@ const Tabel = () => {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
                 setNotification({ show: true, message: 'Data berhasil dihapus!', type: 'success' });
-                setMobils(mobils.filter(mobil => mobil.id !== id));
+                fetchMobils();
             } catch (error) {
-                console.error("Gagal menghapus data:", error);
+                console.error("Gagal menghapus data:", error.response ? error.response.data : error.message);
                 setNotification({ show: true, message: 'Gagal menghapus data.', type: 'danger' });
             }
         }
     };
 
+    const renderPaginationItems = () => {
+        let items = [];
+        for (let number = 1; number <= lastPage; number++) {
+            items.push(
+                <Pagination.Item
+                    key={number}
+                    active={number === currentPage}
+                    onClick={() => setCurrentPage(number)}
+                >
+                    {number}
+                </Pagination.Item>,
+            );
+        }
+        return items;
+    };
+
     return (
         <Container fluid>
             {notification.show && ( <Alert variant={notification.type} onClose={() => setNotification({ ...notification, show: false })} dismissible className="mt-3">{notification.message}</Alert> )}
-            
+
             <Row>
                 <Col md="12">
                     <Card>
@@ -139,11 +175,12 @@ const Tabel = () => {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {loading ? ( <tr><td colSpan="9" className="text-center">Loading...</td></tr>
+                                    {loading ? (
+                                        <tr><td colSpan="9" className="text-center"><Spinner animation="border" size="sm" className="me-2"/>Loading...</td></tr>
                                     ) : mobils.length > 0 ? (
                                         mobils.map((mobil, index) => (
                                             <tr key={mobil.id}>
-                                                <td>{index + 1}</td>
+                                                <td>{(currentPage - 1) * itemsPerPage + index + 1}</td>
                                                 <td>
                                                     {mobil.foto_depan && (<img src={`${API_URL}/storage/mobil/${mobil.foto_depan}`} alt={mobil.merek} style={{ width: '100px', height: 'auto', borderRadius: '4px' }}/>)}
                                                 </td>
@@ -163,9 +200,28 @@ const Tabel = () => {
                                                 </td>
                                             </tr>
                                         ))
-                                    ) : ( <tr><td colSpan="9" className="text-center">Belum ada data.</td></tr> )}
+                                    ) : (
+                                        <tr><td colSpan="9" className="text-center">Belum ada data.</td></tr>
+                                    )}
                                 </tbody>
                             </Table>
+                            {totalItems > itemsPerPage && (
+                                <Row className="mt-4">
+                                    <Col className="d-flex justify-content-center">
+                                        <Pagination>
+                                            <Pagination.Prev
+                                                onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                                                disabled={currentPage === 1}
+                                            />
+                                            {renderPaginationItems()}
+                                            <Pagination.Next
+                                                onClick={() => setCurrentPage(prev => Math.min(prev + 1, lastPage))}
+                                                disabled={currentPage === lastPage}
+                                            />
+                                        </Pagination>
+                                    </Col>
+                                </Row>
+                            )}
                         </Card.Body>
                     </Card>
                 </Col>
@@ -176,8 +232,8 @@ const Tabel = () => {
                     validationSchema={schema}
                     onSubmit={handleFormSubmit}
                     initialValues={
-                        editingMobil 
-                        ? { ...editingMobil, tipe: editingMobil.tipe || '', foto_depan: null, foto_belakang: null, foto_samping: null, foto_dalam: null } 
+                        editingMobil
+                        ? { ...editingMobil, tipe: editingMobil.tipe || '', foto_depan: null, foto_belakang: null, foto_samping: null, foto_dalam: null }
                         : { merek: '', tipe: '', seat: '', harga: '', keterangan: '', foto_depan: null, foto_belakang: null, foto_samping: null, foto_dalam: null }
                     }
                     enableReinitialize

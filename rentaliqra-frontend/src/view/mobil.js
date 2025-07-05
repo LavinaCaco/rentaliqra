@@ -1,5 +1,5 @@
-import React, { Suspense, lazy, useState, useEffect } from "react";
-import { Container, Row, Col, Card, Button, Spinner, Modal, Badge } from "react-bootstrap";
+import React, { Suspense, lazy, useState, useEffect, useCallback } from "react";
+import { Container, Row, Col, Card, Button, Spinner, Modal, Badge, Pagination } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { useNavigate } from "react-router-dom";
 import axios from 'axios';
@@ -12,7 +12,7 @@ const NavbarSection = lazy(() => import("../components/NavbarSection"));
 
 export default function Mobil() {
     const navigate = useNavigate();
-    
+
     const [mobils, setMobils] = useState([]);
     const [loading, setLoading] = useState(true);
     const [showLoginModal, setShowLoginModal] = useState(false);
@@ -20,34 +20,59 @@ export default function Mobil() {
     const [filterTipe, setFilterTipe] = useState('');
     const [filterHarga, setFilterHarga] = useState('');
 
-    const API_URL = 'http://127.0.0.1:8000';
+    const [currentPage, setCurrentPage] = useState(1);
+    const [lastPage, setLastPage] = useState(1);
+    const [totalItems, setTotalItems] = useState(0);
+    const itemsPerPage = 9; 
 
-    const fetchMobils = async (filters = {}) => {
+    const API_URL = 'http://127.0.0.1:8000'; 
+
+
+    const fetchMobils = useCallback(async (filters = {}) => {
         try {
             setLoading(true);
             const cleanFilters = Object.fromEntries(
                 Object.entries(filters).filter(([_, v]) => v != null && v !== '')
             );
-            
-            const response = await axios.get(`${API_URL}/api/mobil`, { params: cleanFilters });
-            setMobils(response.data);
+
+            const response = await axios.get(`${API_URL}/api/mobil`, {
+                params: {
+                    ...cleanFilters,
+                    page: currentPage,       
+                    per_page: itemsPerPage   
+                }
+            });
+
+            if (response.data && Array.isArray(response.data.data)) {
+                setMobils(response.data.data);
+                setCurrentPage(response.data.current_page || 1); 
+                setLastPage(response.data.last_page || 1);       
+                setTotalItems(response.data.total || 0);        
+            } else {
+                console.error("Struktur respons API tidak sesuai:", response.data);
+                setMobils([]); 
+                setCurrentPage(1);
+                setLastPage(1);
+                setTotalItems(0);
+            }
+
         } catch (error) {
             console.error("Gagal mengambil data mobil:", error);
+            setMobils([]); 
+            setCurrentPage(1);
+            setLastPage(1);
+            setTotalItems(0);
         } finally {
             setLoading(false);
         }
-    };
+    }, [API_URL, currentPage, itemsPerPage]); 
 
     useEffect(() => {
-        fetchMobils();
-    }, []);
+        fetchMobils({ tipe: filterTipe, harga: filterHarga });
+    }, [fetchMobils, filterTipe, filterHarga]);
 
     const handleSearch = () => {
-        const filters = {
-            tipe: filterTipe,
-            harga: filterHarga,
-        };
-        fetchMobils(filters);
+        setCurrentPage(1); 
     };
 
     const handleSewaClick = (id) => {
@@ -59,6 +84,22 @@ export default function Mobil() {
         }
     };
 
+    const renderPaginationItems = () => {
+        let items = [];
+        for (let number = 1; number <= lastPage; number++) {
+            items.push(
+                <Pagination.Item
+                    key={number}
+                    active={number === currentPage} 
+                    onClick={() => setCurrentPage(number)} 
+                >
+                    {number}
+                </Pagination.Item>,
+            );
+        }
+        return items;
+    };
+
     return (
         <div style={{ backgroundColor: '#f8f7f4', fontFamily: "Poppins" }}>
             <Suspense fallback={<div>Loading...</div>}>
@@ -68,7 +109,7 @@ export default function Mobil() {
             <div className="py-4 my-4" id="layanan">
                 <h1 className="fw-bold text-center">Temukan Mobil Kebutuhanmu.</h1>
             </div>
-            
+
             <SearchSection
                 filterTipe={filterTipe}
                 setFilterTipe={setFilterTipe}
@@ -85,7 +126,7 @@ export default function Mobil() {
                         mobils.map((mobil) => (
                             <Col md={4} key={mobil.id}>
                                 <Card className="h-100 shadow-sm position-relative">
-                                    <Badge 
+                                    <Badge
                                         bg={mobil.status === 'ready' ? 'success' : 'warning'}
                                         className="position-absolute top-0 end-0 m-2 p-2 text-capitalize"
                                         style={{ zIndex: 1 }}
@@ -104,9 +145,9 @@ export default function Mobil() {
                                         <Card.Text>{mobil.merek}</Card.Text>
                                     </Card.Body>
                                     <Card.Footer className="border-0 bg-white">
-                                        <Button 
-                                            variant="dark" 
-                                            className="w-100" 
+                                        <Button
+                                            variant="dark"
+                                            className="w-100"
                                             onClick={() => handleSewaClick(mobil.id)}
                                             disabled={mobil.status !== 'ready'}
                                         >
@@ -123,6 +164,24 @@ export default function Mobil() {
                         </Col>
                     )}
                 </Row>
+
+                {totalItems > itemsPerPage && (
+                    <Row className="mt-4">
+                        <Col className="d-flex justify-content-center">
+                            <Pagination>
+                                <Pagination.Prev
+                                    onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                                    disabled={currentPage === 1}
+                                />
+                                {renderPaginationItems()}
+                                <Pagination.Next
+                                    onClick={() => setCurrentPage(prev => Math.min(prev + 1, lastPage))}
+                                    disabled={currentPage === lastPage} 
+                                />
+                            </Pagination>
+                        </Col>
+                    </Row>
+                )}
             </Container>
 
             <MapsSection />
