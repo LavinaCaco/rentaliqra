@@ -49,6 +49,7 @@ Kami terbuka terhadap saran, kritik, dan kontribusi untuk membuat Rental Mobil I
 📧 Email: iqra.rental@gmail.com
 📱 WhatsApp: 08xx-xxxx-xxxx
 
+
 ---
 
 ## 🛠️ Cara Menjalankan Proyek
@@ -76,3 +77,11 @@ Clone project dan jalankan secara lokal dengan perintah berikut:
    - npm start
 
 Selamat Anda Berhasil Untuk Menjalankan RentalIqra
+
+```
+
+---
+
+## 💡 Instalasi
+Saat anda mencoba meng-clone repository ini dan sudah berhasil, silahkan register dan saat pertama kali register user
+tersebut otomatis menjadi admin, dan jika anda melakukan registrasi selanjutnya user tersebut akan menjadi user biasa.
