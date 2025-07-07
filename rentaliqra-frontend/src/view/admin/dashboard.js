@@ -1,47 +1,49 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Row, Col, Card, Spinner, Alert } from 'react-bootstrap';
+import { Container, Row, Col, Card, Spinner, Alert, Table } from 'react-bootstrap';
 import { FaCar, FaCarSide, FaCheckCircle } from 'react-icons/fa';
 import axios from 'axios';
 
 const Dashboard = () => {
-    const [stats, setStats] = useState({
-        total_mobil: 0,
-        mobil_tersedia: 0,
-        mobil_disewa: 0,
-    });
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState('');
+  const [stats, setStats] = useState({
+    total_mobil: 0,
+    mobil_tersedia: 0,
+    mobil_disewa: 0,
+  });
 
+  const [penggunaTerbaru, setPenggunaTerbaru] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
 
-    const API_URL = 'http://127.0.0.1:8000';
-    const token = localStorage.getItem('token');
+  const API_URL = 'http://127.0.0.1:8000';
+  const token = localStorage.getItem('token');
 
-    useEffect(() => {
-        const fetchStats = async () => {
-            if (!token) {
-                setError('Autentikasi Gagal. Silakan login kembali.');
-                setLoading(false);
-                return;
-            }
-            try {
-                setLoading(true);
-                const response = await axios.get(`${API_URL}/api/dashboard/stats`, {
-                    headers: { 'Authorization': `Bearer ${token}` }
-                });
-                setStats(response.data);
-            } catch (err) {
-                setError('Gagal memuat data statistik.');
-                console.error(err);
-            } finally {
-                setLoading(false);
-            }
-        };
+  useEffect(() => {
+    const fetchStats = async () => {
+      if (!token) {
+        setError('Autentikasi Gagal. Silakan login kembali.');
+        setLoading(false);
+        return;
+      }
+      try {
+        setLoading(true);
+        const response = await axios.get(`${API_URL}/api/dashboard/stats`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        setStats(response.data);
+        setPenggunaTerbaru(response.data.pengguna_terbaru || []);
+      } catch (err) {
+        setError('Gagal memuat data statistik.');
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-        fetchStats();
-    }, [token]);
+    fetchStats();
+  }, [token]);
 
-    return (
-        <Container fluid>
+  return (
+    <Container fluid>
             <h4 className='mb-3'></h4>
             
             {error && <Alert variant="danger">{error}</Alert>}
@@ -92,23 +94,49 @@ const Dashboard = () => {
                         </Card>
                     </Col>
                 </Row>
-            )}
-
-            <Row>
-                <Col>
-                    <Card className="mt-3">
-                        <Card.Header>
-                            <Card.Title>Lorem ipsum dolor sit amet</Card.Title>
-                        </Card.Header>
-                        <Card.Body>
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam commodo massa mi, id venenatis ipsum ornare vel.
-                        </Card.Body>
-                    </Card>
-                </Col>
-            </Row>
-
-        </Container>
-    );
+            )}     
+        
+        <Row>
+            <Col>
+                <Card className="mt-3">
+                    <Card.Header>
+                    <Card.Title>Pengguna Terbaru</Card.Title>
+                    </Card.Header>
+                    <Card.Body>
+                    <Table responsive striped hover>
+                        <thead>
+                        <tr>
+                            <th>Nama</th>
+                            <th>Email</th>
+                            <th>No. Telepon</th>
+                            <th>Bergabung Pada</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {penggunaTerbaru.length > 0 ? (
+                            penggunaTerbaru.map(user => (
+                            <tr key={user.id}>
+                                <td>{user.first_name} {user.last_name}</td>
+                                <td>{user.email}</td>
+                                <td>{user.phone}</td>
+                                <td>{new Date(user.created_at).toLocaleDateString('id-ID')}</td>
+                            </tr>
+                            ))
+                        ) : (
+                            <tr>
+                            <td colSpan="4" className="text-center text-muted">
+                                Belum ada pengguna yang mendaftar.
+                            </td>
+                            </tr>
+                        )}
+                        </tbody>
+                    </Table>
+                    </Card.Body>
+                </Card>
+            </Col>
+      </Row>
+    </Container>
+  );
 };
 
 export default Dashboard;
