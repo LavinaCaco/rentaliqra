@@ -100,8 +100,6 @@ const Tabel = () => {
         const isEditing = !!editingMobil;
         const url = isEditing ? `${appPath.APP_URL}/api/mobil/${editingMobil.id}` : `${appPath.APP_URL}/api/mobil`;
 
-        if (isEditing) formData.append('_method', 'PUT');
-
         try {
             const response = await axios.post(url, formData, { 
                 headers: { 'Content-Type': 'multipart/form-data', 'Authorization': `Bearer ${token}` },
