@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Card, Spinner, Alert, Table } from 'react-bootstrap';
 import { FaCar, FaCarSide, FaCheckCircle } from 'react-icons/fa';
 import axios from 'axios';
+import api from '../../utils/axios';
 
 const Dashboard = () => {
   const [stats, setStats] = useState({
@@ -14,7 +15,6 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
-  const API_URL = 'http://127.0.0.1:8000';
   const token = localStorage.getItem('token');
 
   useEffect(() => {
@@ -26,7 +26,7 @@ const Dashboard = () => {
       }
       try {
         setLoading(true);
-        const response = await axios.get(`${API_URL}/api/dashboard/stats`, {
+        const response = await api.get(`/dashboard/stats`, {
           headers: { 'Authorization': `Bearer ${token}` }
         });
         setStats(response.data);

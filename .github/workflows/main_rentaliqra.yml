@@ -31,7 +31,7 @@ jobs:
       - name: Build frontend
         working-directory: rentaliqra-frontend
         run: |
-          CI= REACT_APP_API_BASE_URL=https://rentaliqra.azurewebsites.net/api npm run build
+          CI= REACT_APP_BASE_URL=https://rentaliqra.azurewebsites.net npm run build
 
       - name: Copy React build output to Laravel public/
         run: |

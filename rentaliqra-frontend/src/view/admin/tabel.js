@@ -3,6 +3,8 @@ import { Container, Row, Col, Card, Button, Modal, Form, Alert, Table, Spinner, 
 import { Formik } from 'formik';
 import * as yup from 'yup';
 import axios from 'axios';
+import api from '../../utils/axios';
+import appPath from '../../utils/path';
 
 const Tabel = () => {
     const [mobils, setMobils] = useState([]);
@@ -16,13 +18,12 @@ const Tabel = () => {
     const [totalItems, setTotalItems] = useState(0);
     const itemsPerPage = 6; 
 
-    const API_URL = 'http://127.0.0.1:8000';
     const token = localStorage.getItem('token');
 
     const fetchMobils = useCallback(async () => {
         try {
             setLoading(true);
-            const response = await axios.get(`${API_URL}/api/mobil`, {
+            const response = await api.get(`/mobil`, {
                 params: {
                     page: currentPage,
                     per_page: itemsPerPage 
@@ -49,7 +50,7 @@ const Tabel = () => {
         } finally {
             setLoading(false);
         }
-    }, [API_URL, currentPage, itemsPerPage, token]); 
+    }, [appPath.APP_URL, currentPage, itemsPerPage, token]); 
 
     useEffect(() => {
         fetchMobils();
@@ -97,7 +98,7 @@ const Tabel = () => {
         if (values.foto_dalam) formData.append('foto_dalam', values.foto_dalam);
 
         const isEditing = !!editingMobil;
-        const url = isEditing ? `${API_URL}/api/mobil/${editingMobil.id}` : `${API_URL}/api/mobil`;
+        const url = isEditing ? `${appPath.APP_URL}/api/mobil/${editingMobil.id}` : `${appPath.APP_URL}/api/mobil`;
 
         if (isEditing) formData.append('_method', 'PUT');
 
@@ -123,7 +124,7 @@ const Tabel = () => {
     const handleDelete = async (id) => {
         if (window.confirm('Apakah Anda yakin ingin menghapus data ini?')) {
             try {
-                await axios.delete(`${API_URL}/api/mobil/${id}`, {
+                await api.delete(`/mobil/${id}`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
                 setNotification({ show: true, message: 'Data berhasil dihapus!', type: 'success' });
@@ -182,7 +183,7 @@ const Tabel = () => {
                                             <tr key={mobil.id}>
                                                 <td>{(currentPage - 1) * itemsPerPage + index + 1}</td>
                                                 <td>
-                                                    {mobil.foto_depan && (<img src={`${API_URL}/storage/mobil/${mobil.foto_depan}`} alt={mobil.merek} style={{ width: '100px', height: 'auto', borderRadius: '4px' }}/>)}
+                                                    {mobil.foto_depan && (<img src={`${appPath.APP_URL}/storage/mobil/${mobil.foto_depan}`} alt={mobil.merek} style={{ width: '100px', height: 'auto', borderRadius: '4px' }}/>)}
                                                 </td>
                                                 <td>{mobil.merek}</td>
                                                 <td>{mobil.tipe}</td>

@@ -9,6 +9,8 @@ import { id as idLocale } from 'date-fns/locale'; // Import locale 'id'
 import NavbarSection from '../components/NavbarSection';
 import FooterSection from '../components/FooterSection';
 import StarRating from '../components/StarRating';
+import api from '../utils/axios';
+import appPath from '../utils/path';
 
 const RiwayatPesanan = () => {
     const [pesananList, setPesananList] = useState([]);
@@ -18,7 +20,6 @@ const RiwayatPesanan = () => {
     const [showReviewModal, setShowReviewModal] = useState(false);
     const [selectedSewa, setSelectedSewa] = useState(null);
 
-    const API_URL = 'http://127.0.0.1:8000';
     const token = localStorage.getItem('token');
     const navigate = useNavigate();
 
@@ -29,7 +30,7 @@ const RiwayatPesanan = () => {
         }
         try {
             setLoading(true);
-            const response = await axios.get(`${API_URL}/api/riwayat`, { 
+            const response = await api.get(`/riwayat`, { 
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             if (response.data && Array.isArray(response.data)) {
@@ -51,7 +52,7 @@ const RiwayatPesanan = () => {
         } finally {
             setLoading(false);
         }
-    }, [API_URL, token, navigate]);
+    }, [appPath.APP_URL, token, navigate]);
 
     useEffect(() => {
         fetchPesanan();
@@ -74,7 +75,7 @@ const RiwayatPesanan = () => {
     const handleReviewSubmit = async (values, { setSubmitting, setStatus }) => {
         try {
             setSubmitting(true);
-            const response = await axios.post(`${API_URL}/api/sewa/${selectedSewa.id}/reviews`, values, {
+            const response = await api.post(`/sewa/${selectedSewa.id}/reviews`, values, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             setNotification({ show: true, message: response.data.message, type: 'success' });
