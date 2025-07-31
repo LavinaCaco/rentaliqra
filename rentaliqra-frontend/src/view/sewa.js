@@ -6,6 +6,8 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { Formik, useFormikContext } from 'formik';
 import * as yup from 'yup';
 import axios from 'axios';
+import api from '../utils/axios';
+import appPath from '../utils/path';
 import FooterSection from "../components/FooterSection";
 import MapsSection from "../components/MapsSection";
 
@@ -47,14 +49,13 @@ export default function Sewa() {
 
     const [user, setUser] = useState(null);
 
-    const API_URL = 'http://127.0.0.1:8000';
     const token = localStorage.getItem('token');
 
     useEffect(() => {
         const fetchMobilDetail = async () => {
             try {
                 setLoading(true);
-                const response = await axios.get(`${API_URL}/api/mobil/${id}`);
+                const response = await api.get(`/mobil/${id}`);
                 setMobil(response.data);
                 if (response.data.foto_depan) {
                     setMainImage(response.data.foto_depan);
@@ -104,7 +105,7 @@ export default function Sewa() {
     const handleSewaSubmit = async (values, { setSubmitting, setStatus }) => {
         try {
             setSubmitting(true);
-            const response = await axios.post(`${API_URL}/api/sewa`, 
+            const response = await api.post(`/sewa`, 
                 {
                     mobil_id: mobil.id,
                     tanggal_mulai: values.tanggal_mulai,
@@ -212,7 +213,7 @@ export default function Sewa() {
                                         <Carousel.Item key={index}>
                                             <img
                                                 className="d-block w-100"
-                                                src={`${API_URL}/storage/mobil/${foto}`}
+                                                src={`${appPath.APP_URL}/storage/mobil/${foto}`}
                                                 alt={`Slide ${index + 1} - ${mobil.merek}`}
                                                 style={{ height: '450px', objectFit: 'cover', borderRadius: '8px' }}
                                             />
@@ -275,7 +276,7 @@ export default function Sewa() {
                     <Col md={6} className="d-flex justify-content-center mb-3 mb-md-0">
                         <div style={{ padding: "10px", borderRadius: "8px" }} className="bg-dark shadow">
                             <img
-                                src={`${API_URL}/storage/mobil/${mobil.foto_depan}`}
+                                src={`${appPath.APP_URL}/storage/mobil/${mobil.foto_depan}`}
                                 alt={mobil.merek}
                                 style={{
                                     maxWidth: "100%",
@@ -331,13 +332,13 @@ export default function Sewa() {
                                         <Col md={6}>
                                             <h5 className="mb-3">Galeri Foto</h5>
                                             <div className="main-image mb-3">
-                                                <img src={`${API_URL}/storage/mobil/${mainImage}`} alt="Tampilan utama" className="w-100 rounded shadow-sm" style={{height: '250px', objectFit: 'cover'}}/>
+                                                <img src={`${appPath.APP_URL}/storage/mobil/${mainImage}`} alt="Tampilan utama" className="w-100 rounded shadow-sm" style={{height: '250px', objectFit: 'cover'}}/>
                                             </div>
                                             <div className="thumbnail-images d-flex gap-2 flex-wrap">
                                                 {fotoSlides.map((foto, index) => (
                                                     <img 
                                                         key={index}
-                                                        src={`${API_URL}/storage/mobil/${foto}`}
+                                                        src={`${appPath.APP_URL}/storage/mobil/${foto}`}
                                                         alt={`Thumbnail ${index + 1}`}
                                                         className="rounded shadow-sm"
                                                         style={{ width: '80px', height: '60px', objectFit: 'cover', cursor: 'pointer', border: mainImage === foto ? '3px solid #0d6efd' : '3px solid transparent' }}

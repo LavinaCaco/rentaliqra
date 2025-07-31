@@ -2,7 +2,8 @@ import React, { Suspense, lazy, useState, useEffect, useCallback } from "react";
 import { Container, Row, Col, Card, Button, Spinner, Modal, Badge, Pagination } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { useNavigate } from "react-router-dom";
-import axios from 'axios';
+import api from '../utils/axios';
+import appPath from '../utils/path';
 
 import SearchSection from "../components/SearchMobilSection";
 import FooterSection from "../components/FooterSection";
@@ -23,9 +24,7 @@ export default function Mobil() {
     const [currentPage, setCurrentPage] = useState(1);
     const [lastPage, setLastPage] = useState(1);
     const [totalItems, setTotalItems] = useState(0);
-    const itemsPerPage = 9; 
-
-    const API_URL = 'http://127.0.0.1:8000'; 
+    const itemsPerPage = 9;
 
 
     const fetchMobils = useCallback(async (filters = {}) => {
@@ -35,7 +34,7 @@ export default function Mobil() {
                 Object.entries(filters).filter(([_, v]) => v != null && v !== '')
             );
 
-            const response = await axios.get(`${API_URL}/api/mobil`, {
+            const response = await api.get(`/mobil`, {
                 params: {
                     ...cleanFilters,
                     page: currentPage,       
@@ -65,7 +64,7 @@ export default function Mobil() {
         } finally {
             setLoading(false);
         }
-    }, [API_URL, currentPage, itemsPerPage]); 
+    }, [appPath.APP_URL, currentPage, itemsPerPage]); 
 
     useEffect(() => {
         fetchMobils({ tipe: filterTipe, harga: filterHarga });
@@ -135,7 +134,7 @@ export default function Mobil() {
                                     </Badge>
                                     <Card.Img
                                         variant="top"
-                                        src={`${API_URL}/storage/mobil/${mobil.foto_depan}`}
+                                        src={`${appPath.APP_URL}/storage/mobil/${mobil.foto_depan}`}
                                         style={{ height: "250px", objectFit: "cover" }}
                                         alt={mobil.merek}
                                     />

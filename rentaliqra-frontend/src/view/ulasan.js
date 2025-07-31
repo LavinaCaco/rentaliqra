@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Container, Card, Spinner, Alert, Row, Col } from 'react-bootstrap';
 import { FaStar } from 'react-icons/fa';
 import axios from 'axios';
+import api from '../utils/axios';
 import NavbarSection from '../components/NavbarSection';
 import FooterSection from '../components/FooterSection';
 
@@ -25,13 +26,11 @@ const Ulasan = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
 
-    const API_URL = 'http://127.0.0.1:8000';
-
     useEffect(() => {
         const fetchReviews = async () => {
             try {
                 setLoading(true);
-                const response = await axios.get(`${API_URL}/api/reviews`);
+                const response = await api.get(`/reviews`);
                 setReviews(response.data);
             } catch (err) {
                 setError('Gagal memuat data ulasan.');

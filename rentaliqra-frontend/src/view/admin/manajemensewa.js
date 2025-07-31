@@ -2,6 +2,8 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { Container, Card, Button, Table, Spinner, Alert, Badge, Pagination, Dropdown } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import axios from 'axios';
+import api from '../../utils/axios';
+import appPath from '../../utils/path';
 import { FaCheck } from 'react-icons/fa';
 import { format, isValid } from 'date-fns';
 import { id } from 'date-fns/locale'; 
@@ -16,13 +18,12 @@ const ManajemenSewa = () => {
     const [totalItems, setTotalItems] = useState(0);
     const itemsPerPage = 8; 
 
-    const API_URL = 'http://127.0.0.1:8000';
     const token = localStorage.getItem('token');
 
     const fetchSewa = useCallback(async () => {
         try {
             setLoading(true);
-            const response = await axios.get(`${API_URL}/api/sewa`, {
+            const response = await api.get(`/sewa`, {
                 params: {
                     page: currentPage,
                     per_page: itemsPerPage
@@ -51,7 +52,7 @@ const ManajemenSewa = () => {
         } finally {
             setLoading(false);
         }
-    }, [API_URL, currentPage, itemsPerPage, token]);
+    }, [appPath.APP_URL, currentPage, itemsPerPage, token]);
 
     useEffect(() => {
         fetchSewa();
@@ -63,7 +64,7 @@ const ManajemenSewa = () => {
         }
         try {
             setLoading(true); 
-            const response = await axios.put(`${API_URL}/api/sewa/${sewaId}/status`,
+            const response = await api.put(`/sewa/${sewaId}/status`,
                 { status: newStatus },
                 {
                     headers: { 'Authorization': `Bearer ${token}` }

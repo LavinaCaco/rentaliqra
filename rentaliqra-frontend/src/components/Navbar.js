@@ -2,16 +2,17 @@ import React from 'react';
 import { Navbar, Container, Nav } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import api from '../utils/axios';
 
 const TopNavbar = () => {
     const navigate = useNavigate(); 
-    const API_URL = 'http://127.0.0.1:8000';
+    // const API_URL = 'http://127.0.0.1:8000';
 
     const handleLogout = async () => {
         const token = localStorage.getItem('token');
 
         try {
-            await axios.post(`${API_URL}/api/logout`, {}, {
+            await api.post(`/logout`, {}, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }

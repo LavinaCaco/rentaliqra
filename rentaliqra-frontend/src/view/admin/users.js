@@ -3,6 +3,8 @@ import { Container, Row, Col, Card, Button, Modal, Form, Alert, Table, Spinner, 
 import { Formik } from 'formik';
 import * as yup from 'yup';
 import axios from 'axios';
+import api from '../../utils/axios';
+import appPath from '../../utils/path';
 
 const Users = () => {
     const [admins, setAdmins] = useState([]);
@@ -12,7 +14,6 @@ const Users = () => {
     const [showModal, setShowModal] = useState(false);
     const [editingUser, setEditingUser] = useState(null); 
 
-    const API_URL = 'http://127.0.0.1:8000';
     const token = localStorage.getItem('token');
 
     const fetchUsers = async () => {
@@ -23,7 +24,7 @@ const Users = () => {
         }
         try {
             setLoading(true);
-            const response = await axios.get(`${API_URL}/api/users`, {
+            const response = await api.get(`/users`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             setAdmins(response.data.admins);
@@ -69,7 +70,7 @@ const Users = () => {
 
     const handleFormSubmit = async (values, { setSubmitting, resetForm, setStatus }) => {
         const isEditing = !!editingUser;
-        const url = isEditing ? `${API_URL}/api/users/${editingUser.id}` : `${API_URL}/api/users`;
+        const url = isEditing ? `${appPath.APP_URL}/api/users/${editingUser.id}` : `${appPath.APP_URL}/api/users`;
         const method = isEditing ? 'put' : 'post';
 
         const payload = { ...values };
@@ -95,7 +96,7 @@ const Users = () => {
     const handleDelete = async (id) => {
         if (window.confirm('Apakah Anda yakin ingin menghapus pengguna ini?')) {
             try {
-                await axios.delete(`${API_URL}/api/users/${id}`, {
+                await api.delete(`/users/${id}`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
                 setNotification({ show: true, message: 'Pengguna berhasil dihapus!', type: 'success' });
