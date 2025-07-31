@@ -18,6 +18,25 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # Build React App
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install frontend dependencies
+        working-directory: rentaliqra-frontend
+        run: npm install
+
+      - name: Build frontend
+        working-directory: rentaliqra-frontend
+        run: npm run build
+
+      - name: Copy React build output to Laravel public/
+        run: |
+          rm -rf rentaliqra-backend/public/assets rentaliqra-backend/public/static rentaliqra-backend/public/index.html
+          cp -r rentaliqra-frontend/build/* rentaliqra-backend/public/
+
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
@@ -34,12 +53,17 @@ jobs:
         working-directory: rentaliqra-backend
         run: composer validate --no-check-publish && composer install --prefer-dist --no-progress
 
+      # Zip the backend directory for deployment
+      - name: Zip backend project
+        run: |
+          cd rentaliqra-backend
+          zip -r ../rentaliqra.zip .
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
         with:
           name: php-app
-          path: .
+          path: rentaliqra.zip
 
   deploy:
     runs-on: ubuntu-latest
@@ -53,6 +77,10 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: php-app
+
+      - name: Extract zip
+        run: |
+          unzip rentaliqra.zip -d rentaliqra
       
       - name: Login to Azure
         uses: azure/login@v2
@@ -67,5 +95,5 @@ jobs:
         with:
           app-name: 'rentaliqra'
           slot-name: 'Production'
-          package: .
+          package: rentaliqra
           
