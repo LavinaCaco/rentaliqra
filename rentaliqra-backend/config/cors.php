@@ -15,13 +15,13 @@ return [
     |
     */
 
-  
+
 
     'paths' => ['api/*', 'sanctum/csrf-cookie'],
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => ['http://localhost:3000'],
+    'allowed_origins' => ['http://localhost:3000', 'http://localhost:8000', 'https://rentaliqra.azurewebsites.net/'],
 
     'allowed_origins_patterns' => [],
 
